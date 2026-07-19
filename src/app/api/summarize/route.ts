@@ -1,0 +1,112 @@
+import { NextRequest } from "next/server";
+import { createClient } from "@/lib/supabase/server";
+
+interface SummarizeBody {
+  transcript: string;
+  length: "brief" | "detailed" | "bullets";
+}
+
+const LENGTH_PROMPTS: Record<string, string> = {
+  brief:
+    "Provide a brief summary in 2-3 sentences covering the main topic and key takeaway.",
+  detailed:
+    "Provide a detailed summary covering the main topics, key arguments, and important conclusions from the transcript.",
+  bullets:
+    "Provide a summary as bullet points listing the key topics, ideas, and takeaways.",
+};
+
+export async function POST(request: NextRequest) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return Response.json({ error: "Sign in to use AI summaries" }, { status: 401 });
+  }
+
+  try {
+    const body: SummarizeBody = await request.json();
+
+    if (!body.transcript || body.transcript.trim().length < 10) {
+      return Response.json(
+        { error: "Transcript is too short or empty." },
+        { status: 400 }
+      );
+    }
+
+    const lengthInstruction =
+      LENGTH_PROMPTS[body.length] || LENGTH_PROMPTS.brief;
+
+    const systemPrompt = `You are a helpful assistant that summarizes YouTube video transcripts. ${lengthInstruction} Keep it concise and well-structured.`;
+
+    const apiKey = process.env.OPENAI_API_KEY;
+    const apiUrl = process.env.OPENAI_BASE_URL || "https://api.openai.com/v1";
+
+    if (apiKey) {
+      const res = await fetch(`${apiUrl}/chat/completions`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify({
+          model: "gpt-4o-mini",
+          messages: [
+            { role: "system", content: systemPrompt },
+            {
+              role: "user",
+              content: `Here is the transcript:\n\n${body.transcript}`,
+            },
+          ],
+          max_tokens: body.length === "brief" ? 300 : 800,
+          temperature: 0.5,
+        }),
+      });
+
+      if (!res.ok) {
+        const errData = await res.text();
+        console.error("OpenAI API error:", errData);
+        throw new Error("AI service temporarily unavailable");
+      }
+
+      const data = await res.json();
+      return Response.json({ summary: data.choices[0].message.content });
+    }
+
+    // Fallback: simple extractive summary
+    const words = body.transcript.split(/\s+/).filter(Boolean);
+    const firstPart = words.slice(0, Math.min(100, words.length)).join(" ");
+
+    let summary = `This video covers: ${firstPart}...`;
+
+    if (body.length === "bullets") {
+      const sentences = body.transcript
+        .split(/[.!?]+/)
+        .filter((s) => s.trim().length > 20)
+        .slice(0, 5);
+      summary = sentences
+        .map((s) => `• ${s.trim()}.`)
+        .join("\n");
+    } else if (body.length === "detailed") {
+      const sentences = body.transcript
+        .split(/[.!?]+/)
+        .filter((s) => s.trim().length > 20)
+        .slice(0, 8);
+      summary = sentences.map((s) => s.trim() + ".").join(" ");
+    }
+
+    return Response.json({ summary });
+  } catch (error) {
+    console.error("Summarize error:", error);
+    return Response.json(
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : "An unexpected error occurred",
+      },
+      { status: 500 }
+    );
+  }
+}
