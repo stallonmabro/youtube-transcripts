@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Share2, X, Copy, Check, Loader2 } from "lucide-react";
 import type { TranscriptSegment } from "@/lib/youtube";
 
@@ -13,6 +13,7 @@ interface ShareModalProps {
 
 export default function ShareModal({
   open,
+  onClose,
   videoId,
   segments,
 }: ShareModalProps) {
@@ -20,6 +21,25 @@ export default function ShareModal({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === "Escape") onClose();
+    }
+    document.addEventListener("keydown", handleKey);
+
+    // Focus trap: focus the dialog on open
+    setTimeout(() => dialogRef.current?.focus(), 50);
+
+    return () => document.removeEventListener("keydown", handleKey);
+  }, [open, onClose]);
+
+  function handleBackdrop(e: React.MouseEvent) {
+    if (e.target === e.currentTarget) onClose();
+  }
 
   async function generateShareLink() {
     setLoading(true);
@@ -59,8 +79,26 @@ export default function ShareModal({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-      <div className="relative w-full max-w-md rounded-xl border border-border bg-card p-6 shadow-xl">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 transition-opacity duration-200"
+      onClick={handleBackdrop}
+    >
+      <div
+        ref={dialogRef}
+        tabIndex={-1}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Share transcript"
+        className="relative w-full max-w-md rounded-xl border border-border bg-card p-6 shadow-xl animate-in fade-in zoom-in-95"
+      >
+        <button
+          onClick={onClose}
+          className="absolute right-4 top-4 text-muted transition-colors hover:text-foreground"
+          aria-label="Close"
+        >
+          <X size={18} />
+        </button>
+
         <h3 className="text-lg font-semibold text-foreground">
           Share Transcript
         </h3>

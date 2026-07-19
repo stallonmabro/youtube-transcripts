@@ -12,9 +12,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const result = saveSharedTranscript(body.videoId, body.segments);
+    const result = await saveSharedTranscript(body.videoId, body.segments);
 
-    return Response.json(result, { status: 201 });
+    return Response.json({ id: result.id }, { status: 201 });
   } catch (error) {
     console.error("Share save error:", error);
     return Response.json(
@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const data = getSharedTranscript(id);
+  const data = await getSharedTranscript(id);
 
   if (!data) {
     return Response.json(

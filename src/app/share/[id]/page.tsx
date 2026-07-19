@@ -11,7 +11,7 @@ export async function generateMetadata({
   params,
 }: SharePageProps): Promise<Metadata> {
   const { id } = await params;
-  const data = getSharedTranscript(id);
+  const data = await getSharedTranscript(id);
 
   if (!data) return {};
 
@@ -26,7 +26,7 @@ export async function generateMetadata({
 
 export default async function SharePage({ params }: SharePageProps) {
   const { id } = await params;
-  const data = getSharedTranscript(id);
+  const data = await getSharedTranscript(id);
 
   if (!data) {
     notFound();

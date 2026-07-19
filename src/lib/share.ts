@@ -1,20 +1,11 @@
-import fs from "fs";
-import path from "path";
 import type { TranscriptSegment } from "./youtube";
+import { createAdminClient } from "./supabase/admin";
 
 export interface SharedTranscript {
   id: string;
   videoId: string;
   segments: TranscriptSegment[];
   createdAt: string;
-}
-
-const SHARED_DIR = path.join(process.cwd(), ".shared");
-
-function ensureDir() {
-  if (!fs.existsSync(SHARED_DIR)) {
-    fs.mkdirSync(SHARED_DIR, { recursive: true });
-  }
 }
 
 function generateId(): string {
@@ -26,48 +17,73 @@ function generateId(): string {
   return result;
 }
 
-export function saveSharedTranscript(
+export async function saveSharedTranscript(
   videoId: string,
   segments: TranscriptSegment[]
-): SharedTranscript {
-  ensureDir();
+): Promise<SharedTranscript> {
+  const supabase = createAdminClient();
 
   let id = generateId();
   // Ensure uniqueness
-  while (fs.existsSync(path.join(SHARED_DIR, `${id}.json`))) {
+  const { data: existing } = await supabase
+    .from("shared_transcripts")
+    .select("id")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (existing) {
     id = generateId();
   }
 
-  const data: SharedTranscript = {
+  const data = {
+    id,
+    video_id: videoId,
+    segments,
+    created_at: new Date().toISOString(),
+    expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+  };
+
+  const { error } = await supabase.from("shared_transcripts").insert(data);
+
+  if (error) {
+    throw new Error(`Failed to save shared transcript: ${error.message}`);
+  }
+
+  return {
     id,
     videoId,
     segments,
-    createdAt: new Date().toISOString(),
+    createdAt: data.created_at,
   };
-
-  fs.writeFileSync(
-    path.join(SHARED_DIR, `${id}.json`),
-    JSON.stringify(data, null, 2)
-  );
-
-  return data;
 }
 
-export function getSharedTranscript(
+export async function getSharedTranscript(
   id: string
-): SharedTranscript | null {
-  ensureDir();
-
-  // Prevent path traversal
+): Promise<SharedTranscript | null> {
+  // Prevent invalid IDs
   if (!/^[a-z0-9]{8}$/.test(id)) return null;
 
-  const filePath = path.join(SHARED_DIR, `${id}.json`);
-  if (!fs.existsSync(filePath)) return null;
+  const supabase = createAdminClient();
 
-  try {
-    const raw = fs.readFileSync(filePath, "utf-8");
-    return JSON.parse(raw) as SharedTranscript;
-  } catch {
-    return null;
-  }
+  const { data, error } = await supabase
+    .from("shared_transcripts")
+    .select("*")
+    .eq("id", id)
+    .gt("expires_at", new Date().toISOString())
+    .maybeSingle();
+
+  if (error || !data) return null;
+
+  // Clean up expired entries silently (fire-and-forget)
+  supabase
+    .from("shared_transcripts")
+    .delete()
+    .lt("expires_at", new Date().toISOString());
+
+  return {
+    id: data.id,
+    videoId: data.video_id,
+    segments: data.segments as TranscriptSegment[],
+    createdAt: data.created_at,
+  };
 }
