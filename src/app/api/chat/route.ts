@@ -31,6 +31,17 @@ export async function POST(request: NextRequest) {
     }
 
     const apiKey = process.env.OPENAI_API_KEY;
+    const MAX_TRANSCRIPT_CHARS = 25_000;
+    const MAX_HISTORY_MESSAGES = 20;
+
+    if (transcript.length > MAX_TRANSCRIPT_CHARS) {
+      return Response.json(
+        { error: "Transcript is too long for AI chat." },
+        { status: 400 }
+      );
+    }
+
+    const trimmedHistory = (prevMessages || []).slice(-MAX_HISTORY_MESSAGES);
     if (!apiKey) {
       return Response.json(
         { error: "AI chat is not configured." },
@@ -54,7 +65,7 @@ export async function POST(request: NextRequest) {
     const messages = [
       systemMessage,
       userContext,
-      ...prevMessages,
+      ...trimmedHistory,
     ];
 
     const apiUrl = process.env.OPENAI_BASE_URL || "https://api.openai.com/v1";

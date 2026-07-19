@@ -14,14 +14,36 @@ export interface TranscriptResult {
   language: string;
 }
 
+async function withRetry<T>(
+  fn: () => Promise<T>,
+  retries = 2,
+  delayMs = 500
+): Promise<T> {
+  let lastError: Error | undefined;
+  for (let i = 0; i <= retries; i++) {
+    try {
+      return await fn();
+    } catch (error) {
+      lastError = error instanceof Error ? error : new Error(String(error));
+      if (i < retries) {
+        await new Promise((resolve) => setTimeout(resolve, delayMs * 2 ** i));
+      }
+    }
+  }
+  throw lastError;
+}
+
 export async function fetchTranscript(
   videoId: string,
   lang = "en"
 ): Promise<TranscriptResult> {
+  if (!/^[a-zA-Z0-9_-]{11}$/.test(videoId)) {
+    throw new Error("Invalid YouTube video ID.");
+  }
   try {
-    const transcriptItems = await YoutubeTranscript.fetchTranscript(videoId, {
-      lang,
-    });
+    const transcriptItems = await withRetry(() =>
+      YoutubeTranscript.fetchTranscript(videoId, { lang })
+    );
 
     const segments: TranscriptSegment[] = transcriptItems.map((item) => ({
       text: item.text,
@@ -45,6 +67,9 @@ export async function fetchTranscript(
 }
 
 export async function getVideoInfo(videoId: string) {
+  if (!/^[a-zA-Z0-9_-]{11}$/.test(videoId)) {
+    throw new Error("Invalid YouTube video ID.");
+  }
   const apiKey = process.env.YOUTUBE_API_KEY;
 
   if (!apiKey) {

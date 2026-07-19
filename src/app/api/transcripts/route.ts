@@ -1,5 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { validateVideoId } from "@/lib/utils";
+import { MAX_SEGMENTS, MAX_TRANSCRIPT_TEXT_LENGTH } from "@/lib/constants";
+
+function isValidPayload(video_id: string, segments: unknown[]) {
+  if (!validateVideoId(video_id) || !Array.isArray(segments)) return false;
+  if (segments.length > MAX_SEGMENTS) return false;
+  const text = segments.map((s) => (s as { text?: string }).text || "").join("");
+  return text.length <= MAX_TRANSCRIPT_TEXT_LENGTH;
+}
 
 export async function GET() {
   const supabase = await createClient();
@@ -36,9 +45,9 @@ export async function POST(request: NextRequest) {
 
   const body = await request.json();
 
-  if (!body.video_id || !body.segments) {
+  if (!body.video_id || !isValidPayload(body.video_id, body.segments)) {
     return NextResponse.json(
-      { error: "video_id and segments are required" },
+      { error: "A valid video_id and segments array are required" },
       { status: 400 }
     );
   }

@@ -1,6 +1,9 @@
 export const ANON_DAILY_LIMIT = 3;
 export const AUTH_DAILY_LIMIT = 100;
 
+export const MAX_SEGMENTS = 5000;
+export const MAX_TRANSCRIPT_TEXT_LENGTH = 100_000;
+
 export const CAPTION_LANGUAGES = [
   { code: "en", name: "English" },
   { code: "es", name: "Spanish" },

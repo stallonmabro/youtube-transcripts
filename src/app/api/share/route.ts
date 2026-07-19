@@ -1,13 +1,27 @@
 import { NextRequest } from "next/server";
 import { saveSharedTranscript, getSharedTranscript } from "@/lib/share";
+import { validateVideoId } from "@/lib/utils";
+import { MAX_SEGMENTS, MAX_TRANSCRIPT_TEXT_LENGTH } from "@/lib/constants";
+
+function isValidPayload(videoId: string, segments: unknown[]) {
+  if (!validateVideoId(videoId) || !Array.isArray(segments)) return false;
+  if (segments.length > MAX_SEGMENTS) return false;
+  const text = segments.map((s) => (s as { text?: string }).text || "").join("");
+  return text.length <= MAX_TRANSCRIPT_TEXT_LENGTH;
+}
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    if (!body.videoId || !body.segments || !Array.isArray(body.segments)) {
+    if (
+      !body.videoId ||
+      !body.segments ||
+      !Array.isArray(body.segments) ||
+      !isValidPayload(body.videoId, body.segments)
+    ) {
       return Response.json(
-        { error: "videoId and segments are required" },
+        { error: "A valid videoId and segments array are required" },
         { status: 400 }
       );
     }

@@ -39,6 +39,14 @@ export async function POST(request: NextRequest) {
       return Response.json({ error: "Text is too short." }, { status: 400 });
     }
 
+    const MAX_TEXT_CHARS = 25_000;
+    if (text.length > MAX_TEXT_CHARS) {
+      return Response.json(
+        { error: "Text is too long to translate." },
+        { status: 400 }
+      );
+    }
+
     const lang = LANGUAGES.find((l) => l.code === targetLanguage);
     if (!lang) {
       return Response.json({ error: "Unsupported language." }, { status: 400 });

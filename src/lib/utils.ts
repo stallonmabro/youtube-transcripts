@@ -25,6 +25,10 @@ export function extractVideoId(url: string): string | null {
   return null;
 }
 
+export function validateVideoId(videoId: string): boolean {
+  return /^[a-zA-Z0-9_-]{11}$/.test(videoId);
+}
+
 export function formatTimestamp(seconds: number): string {
   const m = Math.floor(seconds / 60);
   const s = Math.floor(seconds % 60);

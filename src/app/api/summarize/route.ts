@@ -35,6 +35,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const MAX_TRANSCRIPT_CHARS = 25_000;
+    if (body.transcript.length > MAX_TRANSCRIPT_CHARS) {
+      return Response.json(
+        { error: "Transcript is too long to summarize." },
+        { status: 400 }
+      );
+    }
+
     const lengthInstruction =
       LENGTH_PROMPTS[body.length] || LENGTH_PROMPTS.brief;
 
