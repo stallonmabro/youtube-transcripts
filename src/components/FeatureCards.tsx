@@ -14,7 +14,7 @@ const features = [
     icon: Zap,
     title: "Free YouTube Transcript Generator",
     description:
-      "Convert any YouTube video to text instantly with our free YouTube transcript generator. No hidden fees, no account required, no limits on usage.",
+      "Convert any YouTube video to text instantly. Get 3 free transcripts per day without an account, or sign in for up to 100 daily transcripts plus premium exports.",
   },
   {
     icon: Clock,

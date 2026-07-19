@@ -64,6 +64,7 @@ export default function TranscriptViewer({
   const [shareOpen, setShareOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [saveError, setSaveError] = useState("");
   const [authOpen, setAuthOpen] = useState(false);
   const { user } = useAuth();
 
@@ -132,21 +133,26 @@ export default function TranscriptViewer({
 
   async function handleSaveToHistory() {
     setSaving(true);
+    setSaveError("");
     try {
-      await fetch("/api/transcripts", {
+      const res = await fetch("/api/transcripts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           video_id: videoId,
+          video_title: videoInfo?.title || null,
+          channel_name: videoInfo?.channelTitle || null,
+          video_thumbnail: videoInfo?.thumbnails?.medium || videoInfo?.thumbnails?.default || null,
           segments,
           duration_minutes: durationMinutes,
           word_count: wordCount,
         }),
       });
+      if (!res.ok) throw new Error("Failed to save");
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
     } catch {
-      // silently fail
+      setSaveError("Failed to save transcript");
     } finally {
       setSaving(false);
     }
@@ -406,6 +412,10 @@ export default function TranscriptViewer({
               </div>
             </div>
           </div>
+
+          {saveError && (
+            <p className="mb-2 text-sm text-red-500">{saveError}</p>
+          )}
 
           {/* Transcript content */}
           <div className="max-h-[60vh] space-y-0 overflow-y-auto rounded-xl border border-border custom-scrollbar">

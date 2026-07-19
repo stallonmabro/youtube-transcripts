@@ -52,7 +52,7 @@ export default function Hero() {
         <div className="text-center">
           <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-xs font-medium text-primary">
             <Check size={12} />
-            Free &bull; 3 free daily &bull; Sign in for unlimited
+            Free &bull; 3 free daily &bull; Sign in for 100/day
           </div>
 
           <h1 className="text-balance text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
@@ -110,7 +110,7 @@ export default function Hero() {
                   Daily limit reached ({rateLimitInfo.count}/{rateLimitInfo.limit})
                 </p>
                 <p className="mt-1 text-xs text-amber-700">
-                  Sign in for unlimited transcript generation.
+                  Sign in to generate up to 100 transcripts per day.
                 </p>
                 <a
                   href="/?signin=true"

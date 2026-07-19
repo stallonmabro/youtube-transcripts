@@ -17,7 +17,7 @@ const faqData = [
   },
   {
     q: "Is this YouTube transcript generator free?",
-    a: "Yes, our YouTube transcript generator is completely free with no hidden fees, no sign-up required, and no usage limits.",
+    a: "Yes, our YouTube transcript generator is free. Anonymous users can generate up to 3 transcripts per day, and signed-in users can generate up to 100 per day.",
   },
   {
     q: "Does the transcript include timestamps?",

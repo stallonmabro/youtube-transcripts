@@ -5,7 +5,7 @@ export function WebsiteJsonLd() {
     name: "YouTube Transcripts",
     url: process.env.NEXT_PUBLIC_SITE_URL || "https://youtubetranscripts.com",
     description:
-      "Free YouTube transcript generator. Convert YouTube videos to text, copy and download transcripts with timestamps in one click.",
+      "Free YouTube transcript generator. Convert YouTube videos to text, copy and download transcripts with timestamps. 3 free daily; sign in for up to 100/day.",
     potentialAction: {
       "@type": "SearchAction",
       target: {
@@ -32,7 +32,7 @@ export function SoftwareAppJsonLd() {
     applicationCategory: "MultimediaApplication",
     operatingSystem: "Web",
     description:
-      "Free online tool to convert YouTube videos to text. Extract, copy, and download YouTube transcripts instantly.",
+      "Free online tool to convert YouTube videos to text. Extract, copy, and download YouTube transcripts instantly. 3 free daily; sign in for up to 100/day.",
     offers: {
       "@type": "Offer",
       price: "0",

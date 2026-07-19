@@ -47,6 +47,16 @@ export async function POST(request: NextRequest) {
     const apiKey = process.env.OPENAI_API_KEY;
     const apiUrl = process.env.OPENAI_BASE_URL || "https://api.openai.com/v1";
 
+    if (!apiKey) {
+      return Response.json(
+        {
+          error: "Translation is not configured.",
+          code: "OPENAI_NOT_CONFIGURED",
+        },
+        { status: 503 }
+      );
+    }
+
     const systemPrompt = `You are a translator. Translate the following YouTube transcript to ${lang.name}. Preserve the original meaning, tone, and line breaks. Return only the translation, no explanations.`;
 
     const response = await fetch(`${apiUrl}/chat/completions`, {
@@ -82,6 +92,7 @@ export async function POST(request: NextRequest) {
           error instanceof Error
             ? error.message
             : "An unexpected error occurred",
+        code: "TRANSLATION_FAILED",
       },
       { status: 500 }
     );

@@ -51,7 +51,7 @@ export default function Footer() {
               Free <strong>YouTube transcript generator</strong> — convert any
               YouTube video to text instantly. Download transcripts with
               timestamps, generate AI summaries, and export in multiple formats.
-              No sign-up required.
+              3 free transcripts per day; sign in for 100/day.
             </p>
             <div className="mt-4 flex gap-3">
               <a
