@@ -13,8 +13,10 @@ function formatTime(seconds: number): string {
 
 export default function SharedTranscriptView({
   data,
+  startTime = 0,
 }: {
   data: SharedTranscript;
+  startTime?: number;
 }) {
   const segments = data.segments;
   const fullText = segments.map((s) => s.text).join(" ");
@@ -49,7 +51,7 @@ export default function SharedTranscriptView({
         <div className="mx-auto mt-4 max-w-4xl px-4 sm:px-6">
           <div className="aspect-video overflow-hidden rounded-xl bg-black shadow-lg">
             <iframe
-              src={`https://www.youtube.com/embed/${data.videoId}`}
+              src={`https://www.youtube.com/embed/${data.videoId}${startTime > 0 ? `?start=${startTime}` : ""}`}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
               className="h-full w-full"

@@ -8,7 +8,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 interface WatchPageProps {
-  searchParams: Promise<{ v?: string }>;
+  searchParams: Promise<{ v?: string; lang?: string; t?: string }>;
 }
 
 export async function generateMetadata({
@@ -28,7 +28,9 @@ export async function generateMetadata({
 }
 
 export default async function WatchPage({ searchParams }: WatchPageProps) {
-  const { v: videoId } = await searchParams;
+  const { v: videoId, lang: rawLang, t: startTimeRaw } = await searchParams;
+  const lang = rawLang || "en";
+  const startTime = Number(startTimeRaw) || 0;
 
   if (!videoId) {
     redirect("/");
@@ -37,7 +39,7 @@ export default async function WatchPage({ searchParams }: WatchPageProps) {
   let segments;
   let videoInfo;
   try {
-    const result = await fetchTranscript(videoId);
+    const result = await fetchTranscript(videoId, lang);
     segments = result.segments;
     videoInfo = await getVideoInfo(videoId);
   } catch (e) {
@@ -81,7 +83,7 @@ export default async function WatchPage({ searchParams }: WatchPageProps) {
           <div className="aspect-video overflow-hidden rounded-xl bg-black shadow-lg">
             <iframe
               id="youtube-player"
-              src={`https://www.youtube.com/embed/${videoId}?enablejsapi=1&origin=${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}`}
+              src={`https://www.youtube.com/embed/${videoId}?enablejsapi=1&origin=${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}${startTime > 0 ? `&start=${startTime}` : ""}`}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
               className="h-full w-full"
@@ -101,6 +103,7 @@ export default async function WatchPage({ searchParams }: WatchPageProps) {
             segments={segments}
             videoId={videoId}
             videoInfo={videoInfo}
+            language={lang}
           />
         </Suspense>
       </main>

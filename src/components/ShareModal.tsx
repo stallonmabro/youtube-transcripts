@@ -21,6 +21,8 @@ export default function ShareModal({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
+  const [includeTimestamp, setIncludeTimestamp] = useState(false);
+  const [timestamp, setTimestamp] = useState(0);
   const dialogRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -58,8 +60,11 @@ export default function ShareModal({
       }
 
       const data = await res.json();
-      const url = `${window.location.origin}/share/${data.id}`;
-      setShareUrl(url);
+      const url = new URL(`${window.location.origin}/share/${data.id}`);
+      if (includeTimestamp && timestamp > 0) {
+        url.searchParams.set("t", String(timestamp));
+      }
+      setShareUrl(url.toString());
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Failed to create share link"
@@ -107,13 +112,36 @@ export default function ShareModal({
         </p>
 
         {!shareUrl && !loading && (
-          <button
-            onClick={generateShareLink}
-            className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-dark"
-          >
-            <Share2 size={16} />
-            Generate Share Link
-          </button>
+          <>
+            <div className="mt-4 flex items-center gap-3">
+              <label className="flex items-center gap-2 text-sm text-muted">
+                <input
+                  type="checkbox"
+                  checked={includeTimestamp}
+                  onChange={(e) => setIncludeTimestamp(e.target.checked)}
+                  className="rounded border-border text-primary focus:ring-primary"
+                />
+                Include timestamp
+              </label>
+              {includeTimestamp && (
+                <input
+                  type="number"
+                  min={0}
+                  value={timestamp}
+                  onChange={(e) => setTimestamp(Number(e.target.value))}
+                  placeholder="Seconds"
+                  className="w-24 rounded-lg border border-border bg-card px-2 py-1 text-sm text-foreground"
+                />
+              )}
+            </div>
+            <button
+              onClick={generateShareLink}
+              className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-dark"
+            >
+              <Share2 size={16} />
+              Generate Share Link
+            </button>
+          </>
         )}
 
         {loading && (

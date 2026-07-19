@@ -5,6 +5,7 @@ import SharedTranscriptView from "./SharedTranscriptView";
 
 interface SharePageProps {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ t?: string }>;
 }
 
 export async function generateMetadata({
@@ -24,13 +25,14 @@ export async function generateMetadata({
   };
 }
 
-export default async function SharePage({ params }: SharePageProps) {
+export default async function SharePage({ params, searchParams }: SharePageProps) {
   const { id } = await params;
+  const { t } = await searchParams;
   const data = await getSharedTranscript(id);
 
   if (!data) {
     notFound();
   }
 
-  return <SharedTranscriptView data={data} />;
+  return <SharedTranscriptView data={data} startTime={Number(t) || 0} />;
 }

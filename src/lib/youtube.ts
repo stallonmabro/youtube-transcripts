@@ -15,10 +15,13 @@ export interface TranscriptResult {
 }
 
 export async function fetchTranscript(
-  videoId: string
+  videoId: string,
+  lang = "en"
 ): Promise<TranscriptResult> {
   try {
-    const transcriptItems = await YoutubeTranscript.fetchTranscript(videoId);
+    const transcriptItems = await YoutubeTranscript.fetchTranscript(videoId, {
+      lang,
+    });
 
     const segments: TranscriptSegment[] = transcriptItems.map((item) => ({
       text: item.text,
@@ -29,7 +32,7 @@ export async function fetchTranscript(
     return {
       segments,
       videoId,
-      language: "en",
+      language: lang,
     };
   } catch (error) {
     console.error("Transcript fetch error:", error);

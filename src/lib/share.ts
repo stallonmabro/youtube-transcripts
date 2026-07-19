@@ -23,6 +23,25 @@ export async function saveSharedTranscript(
 ): Promise<SharedTranscript> {
   const supabase = createAdminClient();
 
+  // Re-use an existing non-expired share for the same video
+  const { data: existingShare } = await supabase
+    .from("shared_transcripts")
+    .select("id, segments, created_at")
+    .eq("video_id", videoId)
+    .gt("expires_at", new Date().toISOString())
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (existingShare) {
+    return {
+      id: existingShare.id,
+      videoId,
+      segments: existingShare.segments as TranscriptSegment[],
+      createdAt: existingShare.created_at,
+    };
+  }
+
   let id = generateId();
   // Ensure uniqueness
   const { data: existing } = await supabase

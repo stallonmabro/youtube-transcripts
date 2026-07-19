@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   Copy,
   Check,
@@ -33,6 +34,7 @@ import TranslatePanel from "./TranslatePanel";
 import ShareModal from "./ShareModal";
 import AuthModal from "./AuthModal";
 import { useAuth } from "./AuthProvider";
+import { CAPTION_LANGUAGES } from "@/lib/constants";
 import type { TranscriptSegment } from "@/lib/youtube";
 
 interface TranscriptViewerProps {
@@ -47,6 +49,7 @@ interface TranscriptViewerProps {
       high?: string;
     };
   };
+  language?: string;
 }
 
 type ActiveTab = "transcript" | "summary" | "chat" | "translate";
@@ -56,6 +59,7 @@ export default function TranscriptViewer({
   segments,
   videoId,
   videoInfo,
+  language = "en",
 }: TranscriptViewerProps) {
   const [activeTab, setActiveTab] = useState<ActiveTab>("transcript");
   const [searchQuery, setSearchQuery] = useState("");
@@ -68,6 +72,8 @@ export default function TranscriptViewer({
   const [authOpen, setAuthOpen] = useState(false);
   const [playerReady, setPlayerReady] = useState(false);
   const { user } = useAuth();
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   // Close download dropdown on Escape
   useEffect(() => {
@@ -83,6 +89,15 @@ export default function TranscriptViewer({
   useEffect(() => {
     fetch("/api/usage/log", { method: "POST" }).catch(() => {});
   }, []);
+
+  // Auto-save transcript for signed-in users
+  useEffect(() => {
+    if (!user) return;
+    const timer = setTimeout(() => {
+      handleSaveToHistory();
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, [user]);
 
   // Track when the YouTube iframe player is ready for seek commands
   useEffect(() => {
@@ -184,6 +199,12 @@ export default function TranscriptViewer({
     }
   }
 
+  function handleLanguageChange(code: string) {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("lang", code);
+    router.push(`/watch?${params.toString()}`);
+  }
+
   function jumpToVideo(offset: number) {
     if (!playerReady) return;
     const iframe = document.querySelector<HTMLIFrameElement>(
@@ -235,6 +256,21 @@ export default function TranscriptViewer({
         <span className="inline-flex items-center gap-1.5">
           <Clock size={14} />
           {durationMinutes} min
+        </span>
+        <span className="inline-flex items-center gap-1.5">
+          <Languages size={14} />
+          <select
+            value={language}
+            onChange={(e) => handleLanguageChange(e.target.value)}
+            aria-label="Caption language"
+            className="rounded-md border border-border bg-card px-1.5 py-0.5 text-xs text-foreground focus:border-primary focus:outline-none"
+          >
+            {CAPTION_LANGUAGES.map((lang) => (
+              <option key={lang.code} value={lang.code}>
+                {lang.name}
+              </option>
+            ))}
+          </select>
         </span>
       </div>
 
@@ -467,7 +503,7 @@ export default function TranscriptViewer({
                     {formatTime(segment.offset)}
                   </button>
                   <p className="text-sm leading-relaxed text-foreground/90">
-                    {segment.text}
+                    <HighlightedText text={segment.text} query={searchQuery} />
                   </p>
                 </div>
               ))
@@ -568,4 +604,35 @@ function formatTime(seconds: number): string {
   const m = Math.floor(seconds / 60);
   const s = Math.floor(seconds % 60);
   return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+}
+
+function escapeRegExp(string: string): string {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function HighlightedText({
+  text,
+  query,
+}: {
+  text: string;
+  query: string;
+}) {
+  if (!query.trim()) return text;
+  const parts = text.split(new RegExp(`(${escapeRegExp(query)})`, "gi"));
+  return (
+    <>
+      {parts.map((part, i) =>
+        part.toLowerCase() === query.toLowerCase() ? (
+          <mark
+            key={i}
+            className="rounded bg-primary/20 px-0.5 text-foreground"
+          >
+            {part}
+          </mark>
+        ) : (
+          part
+        )
+      )}
+    </>
+  );
 }
