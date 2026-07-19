@@ -47,7 +47,7 @@ export default function Hero() {
   }
 
   return (
-    <section className="relative overflow-hidden border-b border-border bg-gradient-to-b from-indigo-50/50 to-white">
+    <section className="relative overflow-hidden border-b border-border bg-gradient-to-b from-indigo-50/50 to-background">
       <div className="mx-auto max-w-4xl px-4 pb-20 pt-16 sm:px-6 sm:pb-28 sm:pt-24">
         <div className="text-center">
           <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-xs font-medium text-primary">
@@ -78,12 +78,13 @@ export default function Hero() {
                   id="youtube-url"
                   type="text"
                   value={url}
+                  data-shortcut="search"
                   onChange={(e) => {
                     setUrl(e.target.value);
                     setError("");
                   }}
                   placeholder="Paste YouTube video URL here..."
-                  className="w-full rounded-xl border border-border bg-white px-4 py-3.5 text-sm text-foreground placeholder:text-muted/60 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  className="w-full rounded-xl border border-border bg-card px-4 py-3.5 text-sm text-foreground placeholder:text-muted/60 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
                 />
               </div>
               <button

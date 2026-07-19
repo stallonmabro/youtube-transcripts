@@ -1,6 +1,8 @@
 "use client";
 
 import { ArrowLeft, Clock, FileText, MessageSquareQuote } from "lucide-react";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import type { SharedTranscript } from "@/lib/share";
 
 function formatTime(seconds: number): string {
@@ -30,21 +32,10 @@ export default function SharedTranscriptView({
   });
 
   return (
-    <div className="min-h-screen bg-white">
-      <header className="border-b border-border bg-white">
-        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
-          <a href="/" className="flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-white text-xs font-bold">
-              YT
-            </div>
-            <span className="text-base font-bold tracking-tight text-foreground">
-              YouTube <span className="text-primary">Transcripts</span>
-            </span>
-          </a>
-        </div>
-      </header>
+    <div className="min-h-screen bg-background">
+      <Header />
 
-      <main>
+      <main className="flex-1">
         <div className="mx-auto max-w-4xl px-4 pt-6 sm:px-6">
           <a
             href="/"
@@ -114,6 +105,7 @@ export default function SharedTranscriptView({
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }

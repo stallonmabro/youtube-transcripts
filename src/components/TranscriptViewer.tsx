@@ -66,11 +66,37 @@ export default function TranscriptViewer({
   const [saved, setSaved] = useState(false);
   const [saveError, setSaveError] = useState("");
   const [authOpen, setAuthOpen] = useState(false);
+  const [playerReady, setPlayerReady] = useState(false);
   const { user } = useAuth();
+
+  // Close download dropdown on Escape
+  useEffect(() => {
+    if (!downloadOpen) return;
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setDownloadOpen(false);
+    }
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
+  }, [downloadOpen]);
 
   // Log usage on mount (once per transcript view)
   useEffect(() => {
     fetch("/api/usage/log", { method: "POST" }).catch(() => {});
+  }, []);
+
+  // Track when the YouTube iframe player is ready for seek commands
+  useEffect(() => {
+    function handleMessage(e: MessageEvent) {
+      if (typeof e.data !== "string") return;
+      try {
+        const data = JSON.parse(e.data);
+        if (data.event === "onReady") setPlayerReady(true);
+      } catch {
+        // ignore non-JSON messages
+      }
+    }
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
   }, []);
 
   const filteredSegments = useMemo(() => {
@@ -159,11 +185,12 @@ export default function TranscriptViewer({
   }
 
   function jumpToVideo(offset: number) {
+    if (!playerReady) return;
     const iframe = document.querySelector<HTMLIFrameElement>(
       "#youtube-player"
     );
-    if (iframe) {
-      iframe.contentWindow?.postMessage(
+    if (iframe?.contentWindow) {
+      iframe.contentWindow.postMessage(
         JSON.stringify({
           event: "command",
           func: "seekTo",
@@ -293,16 +320,17 @@ export default function TranscriptViewer({
               <input
                 type="text"
                 value={searchQuery}
+                data-shortcut="search"
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search transcript..."
-                className="w-full rounded-lg border border-border bg-white py-2 pl-9 pr-3 text-sm text-foreground placeholder:text-muted/60 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                className="w-full rounded-lg border border-border bg-card py-2 pl-9 pr-3 text-sm text-foreground placeholder:text-muted/60 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
               />
             </div>
 
             <div className="flex items-center gap-2">
               <button
                 onClick={() => handleCopy("text")}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-white px-3 py-2 text-xs font-medium text-muted transition-colors hover:text-foreground"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-3 py-2 text-xs font-medium text-muted transition-colors hover:text-foreground"
               >
                 {copied === "text" ? (
                   <>
@@ -317,7 +345,7 @@ export default function TranscriptViewer({
 
               <button
                 onClick={() => handleCopy("timestamps")}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-white px-3 py-2 text-xs font-medium text-muted transition-colors hover:text-foreground"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-3 py-2 text-xs font-medium text-muted transition-colors hover:text-foreground"
               >
                 {copied === "timestamps" ? (
                   <>
@@ -332,7 +360,7 @@ export default function TranscriptViewer({
 
               <button
                 onClick={() => setShareOpen(true)}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-white px-3 py-2 text-xs font-medium text-muted transition-colors hover:text-foreground"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-3 py-2 text-xs font-medium text-muted transition-colors hover:text-foreground"
               >
                 <Share2 size={14} /> Share
               </button>
@@ -341,7 +369,7 @@ export default function TranscriptViewer({
                 <button
                   onClick={handleSaveToHistory}
                   disabled={saving}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-white px-3 py-2 text-xs font-medium text-muted transition-colors hover:text-foreground disabled:opacity-60"
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-3 py-2 text-xs font-medium text-muted transition-colors hover:text-foreground disabled:opacity-60"
                 >
                   {saving ? (
                     <Loader2 size={14} className="animate-spin" />

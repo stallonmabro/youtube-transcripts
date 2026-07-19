@@ -4,7 +4,8 @@ import type { Metadata } from "next";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { fetchTranscript, getVideoInfo } from "@/lib/youtube";
 import TranscriptViewer from "@/components/TranscriptViewer";
-import WatchPageHeader from "./WatchPageHeader";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 interface WatchPageProps {
   searchParams: Promise<{ v?: string }>;
@@ -62,10 +63,10 @@ export default async function WatchPage({ searchParams }: WatchPageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      <WatchPageHeader />
+    <div className="min-h-screen bg-background">
+      <Header />
 
-      <main>
+      <main className="flex-1">
         <div className="mx-auto max-w-4xl px-4 pt-6 sm:px-6">
           <a
             href="/"
@@ -103,6 +104,7 @@ export default async function WatchPage({ searchParams }: WatchPageProps) {
           />
         </Suspense>
       </main>
+      <Footer />
     </div>
   );
 }
@@ -115,9 +117,9 @@ function ErrorState({
   videoId: string;
 }) {
   return (
-    <div className="min-h-screen bg-white">
-      <WatchPageHeader />
-      <main>
+    <div className="min-h-screen bg-background">
+      <Header />
+      <main className="flex-1">
         <div className="mx-auto max-w-2xl px-4 pt-6 sm:px-6">
           <a
             href="/"
@@ -171,6 +173,7 @@ function ErrorState({
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }

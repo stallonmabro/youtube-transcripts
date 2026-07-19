@@ -93,9 +93,10 @@ export default function DashboardContent({
         <input
           type="text"
           value={search}
+          data-shortcut="search"
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search transcripts..."
-          className="w-full rounded-lg border border-border bg-white py-2 pl-9 pr-3 text-sm text-foreground placeholder:text-muted/60 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+          className="w-full rounded-lg border border-border bg-card py-2 pl-9 pr-3 text-sm text-foreground placeholder:text-muted/60 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
         />
       </div>
 

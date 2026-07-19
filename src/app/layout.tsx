@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { WebsiteJsonLd, SoftwareAppJsonLd } from "@/components/JsonLd";
 import { AuthProvider } from "@/components/AuthProvider";
+import KeyboardShortcuts from "@/components/KeyboardShortcuts";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://youtubetranscripts.com";
 
@@ -73,7 +75,12 @@ export default function RootLayout({
         <SoftwareAppJsonLd />
       </head>
       <body className="min-h-full flex flex-col">
-          <AuthProvider>{children}</AuthProvider>
+          <ThemeProvider>
+            <AuthProvider>
+              {children}
+              <KeyboardShortcuts />
+            </AuthProvider>
+          </ThemeProvider>
         </body>
     </html>
   );

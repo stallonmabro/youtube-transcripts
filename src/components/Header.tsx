@@ -6,6 +6,8 @@ import { useAuth } from "./AuthProvider";
 import AuthModal from "./AuthModal";
 import UserMenu from "./UserMenu";
 
+import ThemeToggle from "./ThemeToggle";
+
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/#features", label: "Features" },
@@ -24,9 +26,18 @@ export default function Header() {
     }
   }, []);
 
+  useEffect(() => {
+    if (!mobileOpen) return;
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setMobileOpen(false);
+    }
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
+  }, [mobileOpen]);
+
   return (
     <>
-      <header className="sticky top-0 z-50 border-b border-border bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
+      <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
           <a href="/" className="flex items-center gap-2" aria-label="YouTube Transcripts Home">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-white text-sm font-bold">
@@ -47,6 +58,7 @@ export default function Header() {
                 {link.label}
               </a>
             ))}
+            <ThemeToggle />
             {user ? (
               <UserMenu />
             ) : (
@@ -61,6 +73,7 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center gap-2 md:hidden">
+            <ThemeToggle />
             {user ? <UserMenu /> : null}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}

@@ -89,7 +89,7 @@ export default function TranslatePanel({ transcript }: TranslatePanelProps) {
               <select
                 value={targetLang}
                 onChange={(e) => setTargetLang(e.target.value)}
-                className="w-full appearance-none rounded-lg border border-border bg-white px-3 py-2.5 pr-8 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                className="w-full appearance-none rounded-lg border border-border bg-card px-3 py-2.5 pr-8 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
               >
                 {LANGUAGES.map((lang) => (
                   <option key={lang.code} value={lang.code}>

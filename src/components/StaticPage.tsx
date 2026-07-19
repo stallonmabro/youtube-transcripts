@@ -7,7 +7,7 @@ export default function StaticPage({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
       <Header />
       <main className="flex-1">{children}</main>
       <Footer />
