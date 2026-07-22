@@ -1,51 +1,31 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { ArrowRight, Sparkles } from "lucide-react";
-import StaticPage from "@/components/StaticPage";
+import FeaturePage from "@/components/FeaturePage";
 
 export const metadata: Metadata = {
-  title: "YouTube Video Summarizer — AI-Powered",
-  description:
-    "Summarize any YouTube video with AI. Get brief, detailed, or bullet-point summaries of YouTube transcripts instantly.",
+  title: "YouTube Video Summarizer — AI-Powered Summaries",
+  description: "Get instant AI summaries of any YouTube video. Extract key points, outlines, and takeaways in seconds with our free video summarizer.",
 };
+
+const features = [
+  "AI-powered summaries in brief, detailed, or bullet-point format",
+  "Extract key takeaways without watching the full video",
+  "Free for signed-in users — export to PDF or DOCX",
+];
+
+const relatedTools = [
+  { href: "/features/download-transcript", label: "Download Transcript", desc: "TXT, SRT, VTT, PDF, DOCX" },
+  { href: "/features/subtitle-downloader", label: "Subtitle Downloader", desc: "SRT, VTT, ASS formats" },
+  { href: "/features/transcript-extractor", label: "Transcript Extractor", desc: "Extract captions fast" },
+  { href: "/features/convert-to-text", label: "Convert to Text", desc: "Plain text conversion" },
+];
 
 export default function Page() {
   return (
-    <StaticPage>
-      <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
-        <div className="mb-8 flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10 text-primary">
-          <Sparkles size={28} />
-        </div>
-        <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-          YouTube Video Summarizer
-        </h1>
-        <p className="mt-4 text-lg leading-relaxed text-muted">
-          Get key takeaways from any YouTube video without watching the entire
-          thing. Our AI-powered YouTube video summarizer extracts the most
-          important points from any transcript in seconds.
-        </p>
-
-        <h2 className="mt-12 text-xl font-semibold text-foreground">
-          Summary Types
-        </h2>
-        <ul className="mt-4 space-y-3 text-sm text-muted">
-          <li><strong>Brief</strong> — 2-3 sentence overview of the main topic and key takeaway.</li>
-          <li><strong>Detailed</strong> — Comprehensive summary covering main topics and conclusions.</li>
-          <li><strong>Bullet Points</strong> — Scannable list of key ideas and takeaways.</li>
-        </ul>
-
-        <div className="mt-12 rounded-xl border border-border bg-surface/50 p-6 text-center">
-          <p className="text-sm text-muted">
-            Sign in to generate AI summaries of any transcript.
-          </p>
-          <Link
-            href="/"
-            className="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-dark"
-          >
-            Try It Now <ArrowRight size={16} />
-          </Link>
-        </div>
-      </div>
-    </StaticPage>
+    <FeaturePage
+      title="YouTube Video Summarizer"
+      description="Get instant AI-powered summaries of any YouTube video. Extract key points, chapter outlines, and essential takeaways in seconds — brief, detailed, or bullet-point format."
+      features={features}
+      relatedTools={relatedTools}
+    />
   );
 }

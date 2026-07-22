@@ -22,6 +22,9 @@ const LANGUAGES = [
   { code: "zh", name: "Chinese (Simplified)" },
   { code: "ar", name: "Arabic" },
   { code: "hi", name: "Hindi" },
+  { code: "ha", name: "Hausa" },
+  { code: "yo", name: "Yoruba" },
+  { code: "ig", name: "Igbo" },
 ];
 
 interface TranslatePanelProps {

@@ -19,6 +19,7 @@ import {
   LogIn,
   Sparkles,
   Languages,
+  FileDown,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -52,7 +53,7 @@ interface TranscriptViewerProps {
   language?: string;
 }
 
-type ActiveTab = "transcript" | "summary" | "chat" | "translate";
+type ActiveTab = "transcript" | "summary" | "chat" | "translate" | "export";
 type CopyMode = "text" | "timestamps";
 
 export default function TranscriptViewer({
@@ -65,6 +66,7 @@ export default function TranscriptViewer({
   const [searchQuery, setSearchQuery] = useState("");
   const [copied, setCopied] = useState<CopyMode | null>(null);
   const [downloadOpen, setDownloadOpen] = useState(false);
+  const [downloadFormat, setDownloadFormat] = useState<"txt" | "srt" | "vtt" | "pdf" | "docx">("txt");
   const [shareOpen, setShareOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -341,6 +343,18 @@ export default function TranscriptViewer({
           {!user && <Lock size={12} />}
           Translate
         </button>
+        <button
+          onClick={() => setActiveTab("export")}
+          className={cn(
+            "inline-flex items-center gap-1.5 px-4 py-3 text-sm font-medium transition-colors",
+            activeTab === "export"
+              ? "border-b-2 border-primary text-foreground"
+              : "text-muted hover:text-foreground"
+          )}
+        >
+          <FileDown size={14} />
+          Export
+        </button>
       </div>
 
       {activeTab === "transcript" ? (
@@ -563,7 +577,7 @@ export default function TranscriptViewer({
             </button>
           </div>
         )
-      ) : (
+      ) : activeTab === "translate" ? (
         user ? (
           <TranslatePanel transcript={fullText} />
         ) : (
@@ -586,7 +600,74 @@ export default function TranscriptViewer({
             </button>
           </div>
         )
-      )}
+      ) : activeTab === "export" ? (
+        <div className="space-y-4">
+          <h3 className="text-base font-semibold text-foreground">Download Transcript</h3>
+          <div className="space-y-2">
+            {([
+              { fmt: "txt", label: "Plain Text (.txt)", desc: "Simple text file, no timestamps" },
+              { fmt: "srt", label: "SRT Subtitle (.srt)", desc: "With timestamps, for video players" },
+              { fmt: "vtt", label: "VTT (.vtt)", desc: "WebVTT format, for HTML5 video" },
+            ] as const).map(({ fmt, label, desc }) => (
+              <label
+                key={fmt}
+                className="flex cursor-pointer items-center gap-3 rounded-xl border border-border bg-card px-4 py-3 transition-colors hover:bg-surface/50"
+              >
+                <input
+                  type="radio"
+                  name="export-format"
+                  checked={downloadFormat === fmt}
+                  onChange={() => setDownloadFormat(fmt)}
+                  className="accent-primary"
+                />
+                <div>
+                  <div className="text-sm font-medium text-foreground">{label}</div>
+                  <div className="text-xs text-muted">{desc}</div>
+                </div>
+              </label>
+            ))}
+            {(["pdf", "docx"] as const).map((fmt) => (
+              <label
+                key={fmt}
+                className={`flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 transition-colors ${
+                  user
+                    ? "border-border bg-card hover:bg-surface/50"
+                    : "border-border/50 bg-surface/30 opacity-60"
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="export-format"
+                  checked={downloadFormat === fmt}
+                  onChange={() => setDownloadFormat(fmt)}
+                  disabled={!user}
+                  className="accent-primary"
+                />
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                    {fmt === "pdf" ? "PDF (.pdf)" : "Word (.docx)"}
+                    {!user && (
+                      <span className="inline-flex items-center gap-1 rounded bg-primary/10 px-1.5 py-0.5 text-xs font-medium text-primary">
+                        <Lock size={10} /> Sign in
+                      </span>
+                    )}
+                  </div>
+                  <div className="text-xs text-muted">
+                    {fmt === "pdf" ? "Formatted document" : "Microsoft Word document"}
+                  </div>
+                </div>
+              </label>
+            ))}
+          </div>
+          <button
+            onClick={() => handleDownload(downloadFormat)}
+            className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-dark"
+          >
+            <Download size={16} />
+            Download
+          </button>
+        </div>
+      ) : null}
 
       <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
 
