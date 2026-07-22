@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feature Page — TranscriptPro</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{background:'#ffffff',foreground:'#0f172a',primary:'#4f46e5','primary-dark':'#4338ca',muted:'#64748b',border:'#e2e8f0',surface:'#f8fafc',card:'#ffffff'}}}}</script>
+<style>body{font-family:'Inter',ui-sans-serif,system-ui,sans-serif;background:#ffffff;color:#0f172a}</style>
+</head>
+<body class="min-h-full flex flex-col">
+
+<!-- HEADER -->
+<header style="position:sticky;top:0;z-index:50;border-bottom:1px solid #e2e8f0;background:rgba(255,255,255,0.95);backdrop-filter:blur(8px);">
+  <div style="max-width:72rem;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:64px;padding:0 24px;">
+    <a href="#" style="display:flex;align-items:center;gap:8px;text-decoration:none;">
+      <div style="width:32px;height:32px;border-radius:8px;background:#4f46e5;color:white;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;">YT</div>
+      <span style="font-size:18px;font-weight:700;color:#0f172a;">YouTube <span style="color:#4f46e5;">Transcripts</span></span>
+    </a>
+    <nav style="display:flex;align-items:center;gap:16px;">
+      <a href="#" style="font-size:14px;font-weight:500;color:#64748b;text-decoration:none;">Home</a>
+      <a href="#" style="font-size:14px;font-weight:500;color:#64748b;text-decoration:none;">Features</a>
+      <button style="padding:8px 16px;background:#4f46e5;color:white;font-size:14px;font-weight:600;border:none;border-radius:8px;cursor:pointer;">Sign In</button>
+    </nav>
+  </div>
+</header>
+
+<main style="flex:1;">
+
+  <!-- Hero Section -->
+  <section style="background:linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);border-bottom:1px solid #e2e8f0;padding:64px 0;">
+    <div style="max-width:72rem;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:48px;">
+      <div style="flex:1;">
+        <div style="display:inline-flex;align-items:center;gap:6px;padding:4px 12px;background:#eef2ff;color:#4f46e5;border-radius:9999px;font-size:12px;font-weight:500;margin-bottom:16px;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          Free tool
+        </div>
+        <h1 style="font-size:40px;font-weight:700;line-height:1.15;margin-bottom:16px;">Download YouTube Transcript</h1>
+        <p style="font-size:16px;color:#64748b;line-height:1.6;max-width:500px;margin-bottom:32px;">
+          Download any YouTube video transcript in TXT, SRT, VTT, PDF, or DOCX format. Our free YouTube transcript downloader works instantly — just paste a URL.
+        </p>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div style="display:flex;align-items:center;gap:12px;font-size:15px;">
+            <span style="display:flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:#ecfdf5;color:#10b981;flex-shrink:0;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            Download with or without timestamps
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;font-size:15px;">
+            <span style="display:flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:#ecfdf5;color:#10b981;flex-shrink:0;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            Export to TXT, SRT, VTT, PDF, DOCX
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;font-size:15px;">
+            <span style="display:flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:#ecfdf5;color:#10b981;flex-shrink:0;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            Works on any device — no software needed
+          </div>
+        </div>
+      </div>
+      <div style="flex-shrink:0;width:340px;height:240px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;display:flex;align-items:center;justify-content:center;color:#64748b;font-size:14px;">
+        🎬 Tool illustration / screenshot
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section style="padding:48px 24px;text-align:center;">
+    <h2 style="font-size:24px;font-weight:700;margin-bottom:12px;">Ready to download your transcript?</h2>
+    <p style="font-size:15px;color:#64748b;margin-bottom:24px;">Paste a YouTube URL and get started instantly — no sign-up required.</p>
+    <div style="display:flex;justify-content:center;gap:12px;">
+      <input type="text" placeholder="Paste YouTube URL here..." style="width:400px;padding:12px 16px;border:1px solid #e2e8f0;border-radius:12px;font-size:14px;outline:none;">
+      <button style="padding:12px 24px;background:#4f46e5;color:white;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;">
+        Generate Transcript
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- Related Features -->
+  <section style="padding:48px 24px 64px;background:#f8fafc;border-top:1px solid #e2e8f0;">
+    <div style="max-width:72rem;margin:0 auto;">
+      <h3 style="font-size:14px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:16px;">More Tools</h3>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+        <a href="#" style="padding:16px;border:1px solid #e2e8f0;border-radius:12px;background:#ffffff;text-decoration:none;display:block;">
+          <div style="font-size:14px;font-weight:500;color:#0f172a;">Video Summarizer</div>
+          <div style="font-size:12px;color:#64748b;margin-top:4px;">AI-powered summaries</div>
+        </a>
+        <a href="#" style="padding:16px;border:1px solid #e2e8f0;border-radius:12px;background:#ffffff;text-decoration:none;display:block;">
+          <div style="font-size:14px;font-weight:500;color:#0f172a;">Subtitle Downloader</div>
+          <div style="font-size:12px;color:#64748b;margin-top:4px;">SRT, VTT, ASS formats</div>
+        </a>
+        <a href="#" style="padding:16px;border:1px solid #e2e8f0;border-radius:12px;background:#ffffff;text-decoration:none;display:block;">
+          <div style="font-size:14px;font-weight:500;color:#0f172a;">Transcript Extractor</div>
+          <div style="font-size:12px;color:#64748b;margin-top:4px;">Extract captions fast</div>
+        </a>
+        <a href="#" style="padding:16px;border:1px solid #e2e8f0;border-radius:12px;background:#ffffff;text-decoration:none;display:block;">
+          <div style="font-size:14px;font-weight:500;color:#0f172a;">Convert to Text</div>
+          <div style="font-size:12px;color:#64748b;margin-top:4px;">Plain text conversion</div>
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer style="border-top:1px solid #e2e8f0;background:#f8fafc;">
+  <div style="max-width:72rem;margin:0 auto;padding:48px 24px;">
+    <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:32px;">
+      <!-- Brand -->
+      <div>
+        <a href="/" style="display:flex;align-items:center;gap:8px;text-decoration:none;margin-bottom:12px;">
+          <div style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;background:#4f46e5;color:white;font-size:14px;font-weight:700;">YT</div>
+          <span style="font-size:18px;font-weight:700;color:#0f172a;">YouTube <span style="color:#4f46e5;">Transcripts</span></span>
+        </a>
+        <p style="font-size:12px;line-height:1.6;color:#64748b;margin-bottom:16px;">
+          Free <strong>YouTube transcript generator</strong> — convert any
+          YouTube video to text instantly. Download transcripts with
+          timestamps, generate AI summaries, and export in multiple formats.
+          3 free transcripts per day; sign in for 100/day.
+        </p>
+        <div style="display:flex;gap:8px;">
+          <a href="https://facebook.com" target="_blank" style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:6px;color:#64748b;transition:color .15s;" aria-label="Facebook">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="https://twitter.com" target="_blank" style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:6px;color:#64748b;transition:color .15s;" aria-label="Twitter">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+        </div>
+      </div>
+      <!-- Features -->
+      <div>
+        <h4 style="margin-bottom:12px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:#64748b;">Features</h4>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:8px;">
+          <li><a href="/" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">YouTube Transcript Generator</a></li>
+          <li><a href="/features/download-transcript" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">Download YouTube Transcript</a></li>
+          <li><a href="/features/video-summarizer" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">YouTube Video Summarizer</a></li>
+          <li><a href="/features/subtitle-downloader" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">YouTube Subtitle Downloader</a></li>
+          <li><a href="/features/transcript-extractor" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">YouTube Transcript Extractor</a></li>
+          <li><a href="/features/convert-to-text" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">Convert YouTube to Text</a></li>
+        </ul>
+      </div>
+      <!-- Tools -->
+      <div>
+        <h4 style="margin-bottom:12px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:#64748b;">Tools</h4>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:8px;">
+          <li><a href="/srt-to-vtt" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">SRT to VTT Converter</a></li>
+          <li><a href="/srt-to-txt" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">SRT to TXT Converter</a></li>
+          <li><a href="/srt-to-ass" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">SRT to ASS Converter</a></li>
+          <li><a href="/open-srt-file" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">Open SRT File</a></li>
+          <li><a href="/features/convert-to-text" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">Video to Text Converter</a></li>
+        </ul>
+      </div>
+      <!-- Company -->
+      <div>
+        <h4 style="margin-bottom:12px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:#64748b;">Company</h4>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:8px;">
+          <li><a href="/about" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">About</a></li>
+          <li><a href="/contact" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">Contact Us</a></li>
+          <li><a href="/privacy" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">Privacy Policy</a></li>
+          <li><a href="/terms" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">Terms of Service</a></li>
+        </ul>
+      </div>
+    </div>
+    <!-- Bottom -->
+    <div style="border-top:1px solid #e2e8f0;margin-top:40px;padding-top:24px;text-align:center;">
+      <p style="font-size:12px;color:#64748b;opacity:.6;">
+        &copy; 2026 YouTube Transcripts | <strong>Free YouTube Transcript Generator</strong> | All rights reserved.
+      </p>
+      <p style="margin-top:4px;font-size:12px;color:#64748b;opacity:.4;">
+        Not affiliated with YouTube. This tool is for educational and personal use only. YouTube is a trademark of Google LLC.
+      </p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

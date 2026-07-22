@@ -71,6 +71,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full antialiased">
       <head>
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5545114997623059" crossOrigin="anonymous" />
         <WebsiteJsonLd />
         <SoftwareAppJsonLd />
       </head>

@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full antialiased">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — TranscriptPro</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        background: '#ffffff', foreground: '#0f172a', primary: '#4f46e5',
+        'primary-dark': '#4338ca', 'primary-light': '#818cf8', accent: '#06b6d4',
+        muted: '#64748b', border: '#e2e8f0', surface: '#f8fafc', card: '#ffffff',
+      }
+    }
+  }
+}
+</script>
+<style>
+  body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; background: #ffffff; color: #0f172a; }
+  .dark body { background: #0b1120; color: #f1f5f9; }
+  .state-section { display: none; }
+  .state-section.active { display: block; }
+  @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+  .skeleton { background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+</style>
+</head>
+<body class="min-h-full flex flex-col">
+
+<!-- STATE SWITCHER -->
+<div style="position:fixed;bottom:16px;right:16px;z-index:9999;background:#0f172a;color:white;padding:8px 12px;border-radius:8px;font-size:12px;display:flex;gap:6px;">
+  <button onclick="showState('loading')" style="padding:4px 8px;border-radius:4px;background:#4f46e5;">Loading</button>
+  <button onclick="showState('empty')" style="padding:4px 8px;border-radius:4px;background:#64748b;">Empty</button>
+  <button onclick="showState('error')" style="padding:4px 8px;border-radius:4px;background:#ef4444;">Error</button>
+  <button onclick="showState('populated')" style="padding:4px 8px;border-radius:4px;background:#10b981;">Populated</button>
+</div>
+<script>function showState(s){document.querySelectorAll('.state-section').forEach(el=>el.classList.remove('active'));document.getElementById('state-'+s).classList.add('active');}showState('populated');</script>
+
+<!-- HEADER -->
+<header style="position:sticky;top:0;z-index:50;border-bottom:1px solid #e2e8f0;background:rgba(255,255,255,0.95);backdrop-filter:blur(8px);">
+  <div style="max-width:72rem;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:64px;padding:0 24px;">
+    <a href="#" style="display:flex;align-items:center;gap:8px;text-decoration:none;">
+      <div style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;background:#4f46e5;color:white;font-size:14px;font-weight:700;">YT</div>
+      <span style="font-size:18px;font-weight:700;color:#0f172a;">YouTube <span style="color:#4f46e5;">Transcripts</span></span>
+    </a>
+    <nav style="display:flex;align-items:center;gap:16px;">
+      <a href="#" style="font-size:14px;font-weight:500;color:#64748b;text-decoration:none;">Home</a>
+      <a href="#" style="font-size:14px;font-weight:500;color:#0f172a;text-decoration:none;font-weight:600;">Dashboard</a>
+      <div style="display:flex;align-items:center;gap:8px;padding:4px 12px;border-radius:8px;border:1px solid #e2e8f0;cursor:pointer;">
+        <div style="width:28px;height:28px;border-radius:50%;background:#4f46e5;color:white;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;">S</div>
+        <span style="font-size:14px;color:#0f172a;">stanobi</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main style="flex:1;">
+
+<!-- ============================================ -->
+<!-- STATE: LOADING -->
+<!-- ============================================ -->
+<div id="state-loading" class="state-section" style="max-width:72rem;margin:0 auto;padding:32px 24px;">
+  <!-- Stats skeleton -->
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px;">
+    <div class="skeleton" style="height:88px;border-radius:12px;"></div>
+    <div class="skeleton" style="height:88px;border-radius:12px;"></div>
+    <div class="skeleton" style="height:88px;border-radius:12px;"></div>
+    <div class="skeleton" style="height:88px;border-radius:12px;"></div>
+  </div>
+  <!-- List skeleton -->
+  <div class="skeleton" style="height:240px;border-radius:12px;margin-bottom:12px;"></div>
+  <div class="skeleton" style="height:72px;border-radius:12px;margin-bottom:12px;"></div>
+  <div class="skeleton" style="height:72px;border-radius:12px;margin-bottom:12px;"></div>
+  <div class="skeleton" style="height:72px;border-radius:12px;"></div>
+</div>
+
+<!-- ============================================ -->
+<!-- STATE: EMPTY -->
+<!-- ============================================ -->
+<div id="state-empty" class="state-section" style="max-width:72rem;margin:0 auto;padding:32px 24px;">
+  <!-- Stats (zero) -->
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px;">
+    <div style="border:1px solid #e2e8f0;border-radius:12px;padding:16px;background:#ffffff;">
+      <div style="display:flex;align-items:center;gap:8px;font-size:14px;color:#64748b;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        Today
+      </div>
+      <p style="margin-top:4px;font-size:24px;font-weight:700;">0</p>
+    </div>
+    <div style="border:1px solid #e2e8f0;border-radius:12px;padding:16px;background:#ffffff;">
+      <div style="display:flex;align-items:center;gap:8px;font-size:14px;color:#64748b;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        This Month
+      </div>
+      <p style="margin-top:4px;font-size:24px;font-weight:700;">0</p>
+    </div>
+    <div style="border:1px solid #e2e8f0;border-radius:12px;padding:16px;background:#ffffff;">
+      <div style="display:flex;align-items:center;gap:8px;font-size:14px;color:#64748b;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Saved
+      </div>
+      <p style="margin-top:4px;font-size:24px;font-weight:700;">0</p>
+    </div>
+    <!-- Usage meter -->
+    <div style="border:1px solid #e2e8f0;border-radius:12px;padding:16px;background:#ffffff;">
+      <div style="display:flex;align-items:center;gap:8px;font-size:14px;color:#64748b;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        Daily limit
+      </div>
+      <p style="margin-top:4px;font-size:24px;font-weight:700;">0<span style="font-size:16px;font-weight:400;color:#64748b;"> / 100</span></p>
+      <div style="margin-top:8px;height:4px;background:#e2e8f0;border-radius:2px;"><div style="height:100%;width:0%;background:#4f46e5;border-radius:2px;"></div></div>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div style="border:1px solid #e2e8f0;border-radius:12px;padding:80px 24px;text-align:center;background:#ffffff;">
+    <div style="display:flex;align-items:center;justify-content:center;width:64px;height:64px;margin:0 auto 16px;border-radius:50%;background:#f8fafc;">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+    </div>
+    <h2 style="font-size:20px;font-weight:600;margin-bottom:8px;">No transcripts yet</h2>
+    <p style="font-size:14px;color:#64748b;max-width:400px;margin:0 auto 24px;">
+      Generate your first YouTube transcript — it's free and takes seconds. Your saved transcripts will appear here.
+    </p>
+    <a href="#" style="display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:#4f46e5;color:white;font-size:14px;font-weight:600;border-radius:12px;text-decoration:none;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Generate Your First Transcript
+    </a>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- STATE: ERROR -->
+<!-- ============================================ -->
+<div id="state-error" class="state-section" style="max-width:72rem;margin:0 auto;padding:32px 24px;">
+  <div style="border:1px solid #fecaca;border-radius:12px;padding:80px 24px;text-align:center;background:#fef2f2;">
+    <div style="display:flex;align-items:center;justify-content:center;width:64px;height:64px;margin:0 auto 16px;border-radius:50%;background:#fee2e2;">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    </div>
+    <h2 style="font-size:20px;font-weight:600;margin-bottom:8px;">Failed to load transcripts</h2>
+    <p style="font-size:14px;color:#64748b;max-width:400px;margin:0 auto 24px;">
+      Something went wrong while fetching your saved transcripts. Please try again.
+    </p>
+    <button onclick="showState('loading')" style="display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:#4f46e5;color:white;font-size:14px;font-weight:600;border-radius:12px;border:none;cursor:pointer;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+      Retry
+    </button>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- STATE: POPULATED -->
+<!-- ============================================ -->
+<div id="state-populated" class="state-section active" style="max-width:72rem;margin:0 auto;padding:32px 24px;">
+  <!-- Stats row -->
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px;">
+    <div style="border:1px solid #e2e8f0;border-radius:12px;padding:16px;background:#ffffff;">
+      <div style="display:flex;align-items:center;gap:8px;font-size:14px;color:#64748b;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        Today
+      </div>
+      <p style="margin-top:4px;font-size:24px;font-weight:700;">12</p>
+    </div>
+    <div style="border:1px solid #e2e8f0;border-radius:12px;padding:16px;background:#ffffff;">
+      <div style="display:flex;align-items:center;gap:8px;font-size:14px;color:#64748b;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        This Month
+      </div>
+      <p style="margin-top:4px;font-size:24px;font-weight:700;">247</p>
+    </div>
+    <div style="border:1px solid #e2e8f0;border-radius:12px;padding:16px;background:#ffffff;">
+      <div style="display:flex;align-items:center;gap:8px;font-size:14px;color:#64748b;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Saved
+      </div>
+      <p style="margin-top:4px;font-size:24px;font-weight:700;">156</p>
+    </div>
+    <!-- Usage with progress bar -->
+    <div style="border:1px solid #e2e8f0;border-radius:12px;padding:16px;background:#ffffff;">
+      <div style="display:flex;align-items:center;gap:8px;font-size:14px;color:#64748b;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        Daily limit
+      </div>
+      <p style="margin-top:4px;font-size:24px;font-weight:700;">67<span style="font-size:16px;font-weight:400;color:#64748b;"> / 100</span></p>
+      <div style="margin-top:8px;height:4px;background:#e2e8f0;border-radius:2px;"><div style="height:100%;width:67%;background:#4f46e5;border-radius:2px;"></div></div>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+    <div>
+      <h1 style="font-size:24px;font-weight:700;">My Transcripts</h1>
+      <p style="font-size:14px;color:#64748b;margin-top:4px;">View and manage your saved transcripts.</p>
+    </div>
+    <div style="display:flex;gap:12px;">
+      <!-- Search -->
+      <div style="position:relative;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" placeholder="Search transcripts..." style="width:260px;padding:8px 12px 8px 36px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px;background:#ffffff;outline:none;">
+      </div>
+      <!-- Sort -->
+      <select style="padding:8px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px;background:#ffffff;color:#0f172a;cursor:pointer;">
+        <option>Newest first</option>
+        <option>Oldest first</option>
+        <option>Longest</option>
+        <option>Shortest</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Transcript list -->
+  <div style="display:flex;flex-direction:column;gap:8px;">
+    <!-- Row 1 -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border:1px solid #e2e8f0;border-radius:12px;background:#ffffff;">
+      <div style="flex:1;min-width:0;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <a href="#" style="font-size:14px;font-weight:500;color:#0f172a;text-decoration:none;">The Complete React Native Course 2026 — Build 10 Real Apps</a>
+          <span style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px;font-size:11px;font-weight:500;color:#4f46e5;background:#eef2ff;border-radius:9999px;">New</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:16px;margin-top:4px;font-size:12px;color:#64748b;">
+          <span>Academind</span>
+          <span style="display:flex;align-items:center;gap:4px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> 12,847 words</span>
+          <span style="display:flex;align-items:center;gap:4px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 3h 12m</span>
+          <span>Jul 21, 2026</span>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+        <a href="#" style="display:inline-flex;align-items:center;gap:4px;padding:6px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:12px;font-weight:500;color:#64748b;text-decoration:none;">View</a>
+        <button style="display:inline-flex;align-items:center;gap:4px;padding:6px 12px;border:1px solid #fecaca;border-radius:8px;font-size:12px;font-weight:500;color:#ef4444;background:transparent;cursor:pointer;">Delete</button>
+      </div>
+    </div>
+    <!-- Row 2 -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border:1px solid #e2e8f0;border-radius:12px;background:#ffffff;">
+      <div style="flex:1;min-width:0;">
+        <a href="#" style="font-size:14px;font-weight:500;color:#0f172a;text-decoration:none;">How AI Will Change Programming Forever — Lex Fridman Podcast #438</a>
+        <div style="display:flex;align-items:center;gap:16px;margin-top:4px;font-size:12px;color:#64748b;">
+          <span>Lex Fridman</span>
+          <span style="display:flex;align-items:center;gap:4px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> 28,341 words</span>
+          <span style="display:flex;align-items:center;gap:4px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 2h 48m</span>
+          <span>Jul 20, 2026</span>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+        <a href="#" style="display:inline-flex;align-items:center;gap:4px;padding:6px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:12px;font-weight:500;color:#64748b;text-decoration:none;">View</a>
+        <button style="display:inline-flex;align-items:center;gap:4px;padding:6px 12px;border:1px solid #fecaca;border-radius:8px;font-size:12px;font-weight:500;color:#ef4444;background:transparent;cursor:pointer;">Delete</button>
+      </div>
+    </div>
+    <!-- Row 3 -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border:1px solid #e2e8f0;border-radius:12px;background:#ffffff;">
+      <div style="flex:1;min-width:0;">
+        <a href="#" style="font-size:14px;font-weight:500;color:#0f172a;text-decoration:none;">Building a Full-Stack Fintech App — Billing NG Devlog #1</a>
+        <div style="display:flex;align-items:center;gap:16px;margin-top:4px;font-size:12px;color:#64748b;">
+          <span>—</span>
+          <span style="display:flex;align-items:center;gap:4px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> 5,621 words</span>
+          <span style="display:flex;align-items:center;gap:4px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 42m</span>
+          <span>Jul 19, 2026</span>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+        <a href="#" style="display:inline-flex;align-items:center;gap:4px;padding:6px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:12px;font-weight:500;color:#64748b;text-decoration:none;">View</a>
+        <button style="display:inline-flex;align-items:center;gap:4px;padding:6px 12px;border:1px solid #fecaca;border-radius:8px;font-size:12px;font-weight:500;color:#ef4444;background:transparent;cursor:pointer;">Delete</button>
+      </div>
+    </div>
+    <!-- Row 4 - edge case: very long title -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border:1px solid #e2e8f0;border-radius:12px;background:#ffffff;">
+      <div style="flex:1;min-width:0;">
+        <a href="#" style="font-size:14px;font-weight:500;color:#0f172a;text-decoration:none;" title="Very Long YouTube Video Title That Goes On And On And Might Break Layouts If Not Handled Properly With Truncation">
+          Very Long YouTube Video Title That Goes On And On And Might Break Layouts If Not…
+        </a>
+        <div style="display:flex;align-items:center;gap:16px;margin-top:4px;font-size:12px;color:#64748b;">
+          <span>SomeChannelName</span>
+          <span style="display:flex;align-items:center;gap:4px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> 891 words</span>
+          <span style="display:flex;align-items:center;gap:4px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 12m</span>
+          <span>Jul 18, 2026</span>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+        <a href="#" style="display:inline-flex;align-items:center;gap:4px;padding:6px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:12px;font-weight:500;color:#64748b;text-decoration:none;">View</a>
+        <button style="display:inline-flex;align-items:center;gap:4px;padding:6px 12px;border:1px solid #fecaca;border-radius:8px;font-size:12px;font-weight:500;color:#ef4444;background:transparent;cursor:pointer;">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div style="display:flex;align-items:center;justify-content:center;gap:4px;margin-top:24px;">
+    <button style="padding:6px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px;color:#64748b;background:#ffffff;cursor:pointer;">← Prev</button>
+    <button style="padding:6px 12px;border:1px solid #4f46e5;border-radius:8px;font-size:14px;color:white;background:#4f46e5;cursor:pointer;">1</button>
+    <button style="padding:6px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px;color:#64748b;background:#ffffff;cursor:pointer;">2</button>
+    <button style="padding:6px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px;color:#64748b;background:#ffffff;cursor:pointer;">3</button>
+    <button style="padding:6px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px;color:#64748b;background:#ffffff;cursor:pointer;">Next →</button>
+  </div>
+</div>
+
+</main>
+
+<!-- FOOTER -->
+<footer style="border-top:1px solid #e2e8f0;background:#f8fafc;">
+  <div style="max-width:72rem;margin:0 auto;padding:48px 24px;">
+    <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:32px;">
+      <!-- Brand -->
+      <div>
+        <a href="/" style="display:flex;align-items:center;gap:8px;text-decoration:none;margin-bottom:12px;">
+          <div style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;background:#4f46e5;color:white;font-size:14px;font-weight:700;">YT</div>
+          <span style="font-size:18px;font-weight:700;color:#0f172a;">YouTube <span style="color:#4f46e5;">Transcripts</span></span>
+        </a>
+        <p style="font-size:12px;line-height:1.6;color:#64748b;margin-bottom:16px;">
+          Free <strong>YouTube transcript generator</strong> — convert any
+          YouTube video to text instantly. Download transcripts with
+          timestamps, generate AI summaries, and export in multiple formats.
+          3 free transcripts per day; sign in for 100/day.
+        </p>
+        <div style="display:flex;gap:8px;">
+          <a href="https://facebook.com" target="_blank" style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:6px;color:#64748b;transition:color .15s;" aria-label="Facebook">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="https://twitter.com" target="_blank" style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:6px;color:#64748b;transition:color .15s;" aria-label="Twitter">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+        </div>
+      </div>
+      <!-- Features -->
+      <div>
+        <h4 style="margin-bottom:12px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:#64748b;">Features</h4>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:8px;">
+          <li><a href="/" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">YouTube Transcript Generator</a></li>
+          <li><a href="/features/download-transcript" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">Download YouTube Transcript</a></li>
+          <li><a href="/features/video-summarizer" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">YouTube Video Summarizer</a></li>
+          <li><a href="/features/subtitle-downloader" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">YouTube Subtitle Downloader</a></li>
+          <li><a href="/features/transcript-extractor" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">YouTube Transcript Extractor</a></li>
+          <li><a href="/features/convert-to-text" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">Convert YouTube to Text</a></li>
+        </ul>
+      </div>
+      <!-- Tools -->
+      <div>
+        <h4 style="margin-bottom:12px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:#64748b;">Tools</h4>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:8px;">
+          <li><a href="/srt-to-vtt" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">SRT to VTT Converter</a></li>
+          <li><a href="/srt-to-txt" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">SRT to TXT Converter</a></li>
+          <li><a href="/srt-to-ass" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">SRT to ASS Converter</a></li>
+          <li><a href="/open-srt-file" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">Open SRT File</a></li>
+          <li><a href="/features/convert-to-text" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">Video to Text Converter</a></li>
+        </ul>
+      </div>
+      <!-- Company -->
+      <div>
+        <h4 style="margin-bottom:12px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:#64748b;">Company</h4>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:8px;">
+          <li><a href="/about" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">About</a></li>
+          <li><a href="/contact" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">Contact Us</a></li>
+          <li><a href="/privacy" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">Privacy Policy</a></li>
+          <li><a href="/terms" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">Terms of Service</a></li>
+        </ul>
+      </div>
+    </div>
+    <!-- Bottom -->
+    <div style="border-top:1px solid #e2e8f0;margin-top:40px;padding-top:24px;text-align:center;">
+      <p style="font-size:12px;color:#64748b;opacity:.6;">
+        &copy; 2026 YouTube Transcripts | <strong>Free YouTube Transcript Generator</strong> | All rights reserved.
+      </p>
+      <p style="margin-top:4px;font-size:12px;color:#64748b;opacity:.4;">
+        Not affiliated with YouTube. This tool is for educational and personal use only. YouTube is a trademark of Google LLC.
+      </p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

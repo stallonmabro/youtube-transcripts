@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Watch — TranscriptPro</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{background:'#ffffff',foreground:'#0f172a',primary:'#4f46e5','primary-dark':'#4338ca',muted:'#64748b',border:'#e2e8f0',surface:'#f8fafc',card:'#ffffff'}}}}</script>
+<style>body{font-family:'Inter',ui-sans-serif,system-ui,sans-serif;background:#ffffff;color:#0f172a}.tab-btn{border:none;background:none;padding:8px 16px;font-size:14px;font-weight:500;color:#64748b;cursor:pointer;border-bottom:2px solid transparent}.tab-btn.active{color:#4f46e5;border-bottom-color:#4f46e5}.tab-panel{display:none}.tab-panel.active{display:block}.timestamp{color:#4f46e5;cursor:pointer;font-size:12px;font-family:'JetBrains Mono',monospace;flex-shrink:0}.transcript-line{padding:8px 12px;border-radius:8px;font-size:14px;line-height:1.6;cursor:pointer;display:flex;gap:12px}.transcript-line:hover{background:#f8fafc}.transcript-line .time{color:#4f46e5;font-size:12px;font-family:'JetBrains Mono',monospace;flex-shrink:0;padding-top:2px}.highlight{background:#fef9c3;border-radius:4px;padding:0 2px}</style>
+</head>
+<body class="min-h-full flex flex-col">
+
+<!-- HEADER -->
+<header style="position:sticky;top:0;z-index:50;border-bottom:1px solid #e2e8f0;background:rgba(255,255,255,0.95);backdrop-filter:blur(8px);">
+  <div style="max-width:80rem;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:64px;padding:0 24px;">
+    <a href="#" style="display:flex;align-items:center;gap:8px;text-decoration:none;">
+      <div style="width:32px;height:32px;border-radius:8px;background:#4f46e5;color:white;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;">YT</div>
+      <span style="font-size:18px;font-weight:700;color:#0f172a;">YouTube <span style="color:#4f46e5;">Transcripts</span></span>
+    </a>
+    <a href="#" style="display:flex;align-items:center;gap:4px;font-size:14px;color:#64748b;text-decoration:none;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      Back
+    </a>
+  </div>
+</header>
+
+<main style="flex:1;">
+
+  <!-- Video Player -->
+  <div style="background:#000;">
+    <div style="max-width:80rem;margin:0 auto;">
+      <div style="aspect-ratio:16/9;max-height:70vh;display:flex;align-items:center;justify-content:center;background:#111;color:#666;font-size:14px;">
+        ▶ YouTube Video Player
+      </div>
+    </div>
+  </div>
+
+  <!-- Video info bar -->
+  <div style="border-bottom:1px solid #e2e8f0;padding:16px 0;">
+    <div style="max-width:80rem;margin:0 auto;padding:0 24px;">
+      <h1 style="font-size:20px;font-weight:700;">The Complete React Native Course 2026</h1>
+      <div style="display:flex;align-items:center;gap:20px;margin-top:6px;font-size:13px;color:#64748b;">
+        <span>Academind • 3.2M subscribers</span>
+        <span>3h 12m</span>
+        <span>1.2M views</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Transcript + Sidebar -->
+  <div style="max-width:80rem;margin:0 auto;display:grid;grid-template-columns:1fr 380px;gap:0;min-height:60vh;">
+
+    <!-- LEFT: Transcript viewer -->
+    <div style="padding:20px;border-right:1px solid #e2e8f0;">
+      <!-- Toolbar -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <h2 style="font-size:16px;font-weight:600;">Transcript</h2>
+          <span style="font-size:12px;color:#64748b;background:#f8fafc;padding:2px 10px;border-radius:9999px;">EN</span>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <button style="padding:6px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:12px;color:#64748b;background:#fff;cursor:pointer;display:flex;align-items:center;gap:4px;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copy
+          </button>
+          <button style="padding:6px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:12px;color:#64748b;background:#fff;cursor:pointer;display:flex;align-items:center;gap:4px;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download
+          </button>
+          <button style="padding:6px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:12px;color:#64748b;background:#fff;cursor:pointer;display:flex;align-items:center;gap:4px;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Search
+          </button>
+        </div>
+      </div>
+
+      <!-- Transcript lines -->
+      <div style="display:flex;flex-direction:column;gap:2px;max-height:60vh;overflow-y:auto;">
+        <div class="transcript-line"><span class="time">00:05</span><span>Welcome to the <span class="highlight">complete</span> React Native course for <span class="highlight">2026</span>. In this course, we're going to build 10 real-world applications from scratch using React Native and Expo.</span></div>
+        <div class="transcript-line"><span class="time">00:14</span><span>Before we dive in, let me give you a quick overview of what we'll cover. We'll start with the fundamentals — components, state, navigation — and gradually work our way up to more advanced topics like animations, native modules, and app store deployment.</span></div>
+        <div class="transcript-line"><span class="time">00:28</span><span>If you're new to React Native, don't worry. We'll begin from the very basics. But even if you have some experience, you'll find the later sections challenging and rewarding.</span></div>
+        <div class="transcript-line"><span class="time">00:42</span><span>The first app we'll build is a task manager — it's simple enough for beginners but covers all the core concepts you'll need: lists, inputs, state management, and local storage.</span></div>
+        <div class="transcript-line"><span class="time">00:57</span><span>After that, we'll build a weather app that fetches data from a real API, a chat application with real-time messaging, a fitness tracker with charts, and several more progressively complex projects.</span></div>
+        <div class="transcript-line"><span class="time">01:12</span><span>By the end of this course, you'll have a portfolio of 10 complete React Native apps, and you'll be confident building and deploying your own mobile applications to both the App Store and Google Play.</span></div>
+        <div class="transcript-line"><span class="time">01:28</span><span>Let's start by setting up our development environment. You'll need Node.js 18 or later, and either a Mac with Xcode for iOS development or Android Studio for Android development.</span></div>
+        <div class="transcript-line"><span class="time">01:45</span><span>Open your terminal and run: <code style="background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:13px;">npx create-expo-app@latest</code>. This will scaffold a new Expo project with all the necessary configuration.</span></div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Sidebar panels -->
+    <div style="padding:20px;display:flex;flex-direction:column;">
+
+      <!-- Tabs -->
+      <div style="display:flex;border-bottom:1px solid #e2e8f0;margin-bottom:16px;">
+        <button class="tab-btn active" onclick="switchTab('summary')">Summary</button>
+        <button class="tab-btn" onclick="switchTab('translate')">Translate</button>
+        <button class="tab-btn" onclick="switchTab('chat')">Chat</button>
+        <button class="tab-btn" onclick="switchTab('export')">Export</button>
+      </div>
+
+      <!-- Summary Panel -->
+      <div id="tab-summary" class="tab-panel active">
+        <div style="display:flex;gap:6px;margin-bottom:16px;">
+          <button style="padding:4px 12px;background:#eef2ff;color:#4f46e5;border:none;border-radius:9999px;font-size:12px;font-weight:500;cursor:pointer;">Brief</button>
+          <button style="padding:4px 12px;background:#fff;color:#64748b;border:1px solid #e2e8f0;border-radius:9999px;font-size:12px;cursor:pointer;">Detailed</button>
+          <button style="padding:4px 12px;background:#fff;color:#64748b;border:1px solid #e2e8f0;border-radius:9999px;font-size:12px;cursor:pointer;">Bullet Points</button>
+        </div>
+        <button style="width:100%;padding:10px;background:#4f46e5;color:white;border:none;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;margin-bottom:16px;">Generate Summary</button>
+        <div style="border:1px solid #e2e8f0;border-radius:10px;padding:16px;font-size:14px;line-height:1.7;color:#334155;background:#f8fafc;">
+          <p style="font-weight:600;margin-bottom:8px;">📝 AI Summary</p>
+          <p>This video is a comprehensive React Native course for 2026 that teaches mobile app development by building 10 real-world projects. It covers fundamentals (components, state, navigation) through advanced topics (animations, native modules, deployment). <strong>3/100 free summaries used today.</strong></p>
+        </div>
+      </div>
+
+      <!-- Translate Panel -->
+      <div id="tab-translate" class="tab-panel">
+        <div style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;">
+          <button style="padding:4px 12px;background:#eef2ff;color:#4f46e5;border:none;border-radius:9999px;font-size:12px;font-weight:500;cursor:pointer;">🇪🇸 Spanish</button>
+          <button style="padding:4px 12px;background:#fff;color:#64748b;border:1px solid #e2e8f0;border-radius:9999px;font-size:12px;cursor:pointer;">🇫🇷 French</button>
+          <button style="padding:4px 12px;background:#fff;color:#64748b;border:1px solid #e2e8f0;border-radius:9999px;font-size:12px;cursor:pointer;">🇩🇪 German</button>
+          <button style="padding:4px 12px;background:#fff;color:#64748b;border:1px solid #e2e8f0;border-radius:9999px;font-size:12px;cursor:pointer;">🇳🇬 Hausa</button>
+          <button style="padding:4px 12px;background:#fff;color:#64748b;border:1px solid #e2e8f0;border-radius:9999px;font-size:12px;cursor:pointer;">🇳🇬 Yoruba</button>
+          <button style="padding:4px 12px;background:#fff;color:#64748b;border:1px solid #e2e8f0;border-radius:9999px;font-size:12px;cursor:pointer;">🇳🇬 Igbo</button>
+        </div>
+        <button style="width:100%;padding:10px;background:#4f46e5;color:white;border:none;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;margin-bottom:16px;">Translate Transcript</button>
+        <div style="border:1px solid #e2e8f0;border-radius:10px;padding:16px;font-size:14px;line-height:1.7;color:#334155;background:#f8fafc;">
+          <p style="color:#64748b;text-align:center;padding:20px;">Select a language and click "Translate" to get started.</p>
+        </div>
+      </div>
+
+      <!-- Chat Panel -->
+      <div id="tab-chat" class="tab-panel">
+        <div style="display:flex;flex-direction:column;height:400px;">
+          <div style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding-right:8px;">
+            <div style="align-self:flex-start;max-width:85%;padding:10px 14px;background:#f8fafc;border-radius:12px 12px 12px 4px;font-size:13px;line-height:1.5;">
+              Ask me anything about this video's transcript! I can answer questions, explain concepts, or find specific moments.
+            </div>
+            <div style="align-self:flex-end;max-width:85%;padding:10px 14px;background:#eef2ff;border-radius:12px 12px 4px 12px;font-size:13px;line-height:1.5;">
+              What are the 10 apps we'll build?
+            </div>
+            <div style="align-self:flex-start;max-width:85%;padding:10px 14px;background:#f8fafc;border-radius:12px 12px 12px 4px;font-size:13px;line-height:1.5;">
+              Based on the transcript, the course covers: 1) Task Manager, 2) Weather App, 3) Real-time Chat, 4) Fitness Tracker with Charts, plus 6 more progressively complex projects. The instructor hasn't named all 10 in this section of the video.
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;">
+            <input type="text" placeholder="Ask about this transcript..." style="flex:1;padding:8px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;outline:none;">
+            <button style="padding:8px 16px;background:#4f46e5;color:white;border:none;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;">Send</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Export Panel -->
+      <div id="tab-export" class="tab-panel">
+        <h3 style="font-size:16px;font-weight:600;margin-bottom:16px;">Download Transcript</h3>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <label style="display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid #e2e8f0;border-radius:10px;cursor:pointer;">
+            <input type="radio" name="format" checked style="accent-color:#4f46e5;">
+            <div><div style="font-size:14px;font-weight:500;">Plain Text (.txt)</div><div style="font-size:12px;color:#64748b;">Simple text file, no timestamps</div></div>
+          </label>
+          <label style="display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid #e2e8f0;border-radius:10px;cursor:pointer;">
+            <input type="radio" name="format" style="accent-color:#4f46e5;">
+            <div><div style="font-size:14px;font-weight:500;">SRT Subtitle (.srt)</div><div style="font-size:12px;color:#64748b;">With timestamps, for video players</div></div>
+          </label>
+          <label style="display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid #e2e8f0;border-radius:10px;cursor:pointer;">
+            <input type="radio" name="format" style="accent-color:#4f46e5;">
+            <div><div style="font-size:14px;font-weight:500;">VTT (.vtt)</div><div style="font-size:12px;color:#64748b;">WebVTT format, for HTML5 video</div></div>
+          </label>
+          <label style="display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid #e2e8f0;border-radius:10px;cursor:pointer;">
+            <input type="radio" name="format" style="accent-color:#4f46e5;">
+            <div><div style="font-size:14px;font-weight:500;">PDF (.pdf) <span style="font-size:11px;background:#eef2ff;color:#4f46e5;padding:1px 6px;border-radius:4px;">Sign in</span></div><div style="font-size:12px;color:#64748b;">Formatted document</div></div>
+          </label>
+          <label style="display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid #e2e8f0;border-radius:10px;cursor:pointer;">
+            <input type="radio" name="format" style="accent-color:#4f46e5;">
+            <div><div style="font-size:14px;font-weight:500;">Word (.docx) <span style="font-size:11px;background:#eef2ff;color:#4f46e5;padding:1px 6px;border-radius:4px;">Sign in</span></div><div style="font-size:12px;color:#64748b;">Microsoft Word document</div></div>
+          </label>
+        </div>
+        <button style="width:100%;margin-top:16px;padding:12px;background:#4f46e5;color:white;border:none;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;">Download</button>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<script>
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector('[onclick="switchTab(\''+name+'\')"]').classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
+}
+</script>
+
+<footer style="border-top:1px solid #e2e8f0;background:#f8fafc;">
+  <div style="max-width:72rem;margin:0 auto;padding:48px 24px;">
+    <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:32px;">
+      <!-- Brand -->
+      <div>
+        <a href="/" style="display:flex;align-items:center;gap:8px;text-decoration:none;margin-bottom:12px;">
+          <div style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;background:#4f46e5;color:white;font-size:14px;font-weight:700;">YT</div>
+          <span style="font-size:18px;font-weight:700;color:#0f172a;">YouTube <span style="color:#4f46e5;">Transcripts</span></span>
+        </a>
+        <p style="font-size:12px;line-height:1.6;color:#64748b;margin-bottom:16px;">
+          Free <strong>YouTube transcript generator</strong> — convert any
+          YouTube video to text instantly. Download transcripts with
+          timestamps, generate AI summaries, and export in multiple formats.
+          3 free transcripts per day; sign in for 100/day.
+        </p>
+        <div style="display:flex;gap:8px;">
+          <a href="https://facebook.com" target="_blank" style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:6px;color:#64748b;transition:color .15s;" aria-label="Facebook">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="https://twitter.com" target="_blank" style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:6px;color:#64748b;transition:color .15s;" aria-label="Twitter">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+        </div>
+      </div>
+      <!-- Features -->
+      <div>
+        <h4 style="margin-bottom:12px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:#64748b;">Features</h4>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:8px;">
+          <li><a href="/" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">YouTube Transcript Generator</a></li>
+          <li><a href="/features/download-transcript" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">Download YouTube Transcript</a></li>
+          <li><a href="/features/video-summarizer" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">YouTube Video Summarizer</a></li>
+          <li><a href="/features/subtitle-downloader" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">YouTube Subtitle Downloader</a></li>
+          <li><a href="/features/transcript-extractor" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">YouTube Transcript Extractor</a></li>
+          <li><a href="/features/convert-to-text" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">Convert YouTube to Text</a></li>
+        </ul>
+      </div>
+      <!-- Tools -->
+      <div>
+        <h4 style="margin-bottom:12px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:#64748b;">Tools</h4>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:8px;">
+          <li><a href="/srt-to-vtt" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">SRT to VTT Converter</a></li>
+          <li><a href="/srt-to-txt" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">SRT to TXT Converter</a></li>
+          <li><a href="/srt-to-ass" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">SRT to ASS Converter</a></li>
+          <li><a href="/open-srt-file" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">Open SRT File</a></li>
+          <li><a href="/features/convert-to-text" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">Video to Text Converter</a></li>
+        </ul>
+      </div>
+      <!-- Company -->
+      <div>
+        <h4 style="margin-bottom:12px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:#64748b;">Company</h4>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:8px;">
+          <li><a href="/about" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">About</a></li>
+          <li><a href="/contact" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">Contact Us</a></li>
+          <li><a href="/privacy" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">Privacy Policy</a></li>
+          <li><a href="/terms" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">Terms of Service</a></li>
+        </ul>
+      </div>
+    </div>
+    <!-- Bottom -->
+    <div style="border-top:1px solid #e2e8f0;margin-top:40px;padding-top:24px;text-align:center;">
+      <p style="font-size:12px;color:#64748b;opacity:.6;">
+        &copy; 2026 YouTube Transcripts | <strong>Free YouTube Transcript Generator</strong> | All rights reserved.
+      </p>
+      <p style="margin-top:4px;font-size:12px;color:#64748b;opacity:.4;">
+        Not affiliated with YouTube. This tool is for educational and personal use only. YouTube is a trademark of Google LLC.
+      </p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

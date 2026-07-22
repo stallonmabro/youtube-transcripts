@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — TranscriptPro</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{background:'#ffffff',foreground:'#0f172a',primary:'#4f46e5','primary-dark':'#4338ca',muted:'#64748b',border:'#e2e8f0',surface:'#f8fafc',card:'#ffffff'}}}}</script>
+<style>body{font-family:'Inter',ui-sans-serif,system-ui,sans-serif;background:#ffffff;color:#0f172a}</style>
+</head>
+<body class="min-h-full flex flex-col">
+
+<!-- HEADER -->
+<header style="position:sticky;top:0;z-index:50;border-bottom:1px solid #e2e8f0;background:rgba(255,255,255,0.95);backdrop-filter:blur(8px);">
+  <div style="max-width:72rem;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:64px;padding:0 24px;">
+    <a href="#" style="display:flex;align-items:center;gap:8px;text-decoration:none;">
+      <div style="width:32px;height:32px;border-radius:8px;background:#4f46e5;color:white;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;">YT</div>
+      <span style="font-size:18px;font-weight:700;color:#0f172a;">YouTube <span style="color:#4f46e5;">Transcripts</span></span>
+    </a>
+    <nav style="display:flex;align-items:center;gap:16px;">
+      <a href="#" style="font-size:14px;font-weight:500;color:#64748b;text-decoration:none;">Home</a>
+      <a href="#" style="font-size:14px;font-weight:500;color:#64748b;text-decoration:none;">Dashboard</a>
+      <button style="padding:8px 16px;background:#4f46e5;color:white;font-size:14px;font-weight:600;border:none;border-radius:8px;cursor:pointer;">Sign In</button>
+    </nav>
+  </div>
+</header>
+
+<main style="flex:1;max-width:48rem;margin:0 auto;padding:64px 24px;width:100%;">
+
+  <!-- Page header -->
+  <div style="text-align:center;margin-bottom:48px;">
+    <h1 style="font-size:36px;font-weight:700;margin-bottom:12px;">Get in Touch</h1>
+    <p style="font-size:16px;color:#64748b;line-height:1.6;max-width:560px;margin:0 auto;">
+      Have a question, suggestion, or need help with YouTube transcripts? We'd love to hear from you.
+    </p>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 300px;gap:32px;">
+
+    <!-- Contact Form -->
+    <div>
+      <form onsubmit="event.preventDefault();alert('Form submitted!');" style="display:flex;flex-direction:column;gap:16px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div>
+            <label style="display:block;font-size:14px;font-weight:500;margin-bottom:6px;">Name</label>
+            <input type="text" placeholder="Your name" style="width:100%;padding:10px 14px;border:1px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <label style="display:block;font-size:14px;font-weight:500;margin-bottom:6px;">Email</label>
+            <input type="email" placeholder="you@example.com" style="width:100%;padding:10px 14px;border:1px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;box-sizing:border-box;">
+          </div>
+        </div>
+        <div>
+          <label style="display:block;font-size:14px;font-weight:500;margin-bottom:6px;">Subject</label>
+          <select style="width:100%;padding:10px 14px;border:1px solid #e2e8f0;border-radius:10px;font-size:14px;background:#ffffff;outline:none;box-sizing:border-box;">
+            <option>General inquiry</option>
+            <option>Bug report</option>
+            <option>Feature request</option>
+            <option>Billing / Account</option>
+            <option>Partnership</option>
+          </select>
+        </div>
+        <div>
+          <label style="display:block;font-size:14px;font-weight:500;margin-bottom:6px;">Message</label>
+          <textarea rows="5" placeholder="Tell us what's on your mind..." style="width:100%;padding:10px 14px;border:1px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;resize:vertical;min-height:120px;box-sizing:border-box;"></textarea>
+        </div>
+        <button type="submit" style="padding:12px 24px;background:#4f46e5;color:white;font-size:14px;font-weight:600;border:none;border-radius:12px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          Send Message
+        </button>
+      </form>
+    </div>
+
+    <!-- Sidebar info -->
+    <div style="display:flex;flex-direction:column;gap:20px;">
+      <div style="padding:20px;border:1px solid #e2e8f0;border-radius:12px;background:#ffffff;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+          <div style="width:36px;height:36px;border-radius:8px;background:#eef2ff;display:flex;align-items:center;justify-content:center;color:#4f46e5;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div><div style="font-size:14px;font-weight:500;">Email</div><a href="#" style="font-size:13px;color:#64748b;text-decoration:none;">hello@etranscripts.com.ng</a></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:36px;height:36px;border-radius:8px;background:#f0fdf4;display:flex;align-items:center;justify-content:center;color:#10b981;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div><div style="font-size:14px;font-weight:500;">Response Time</div><div style="font-size:13px;color:#64748b;">Within 24 hours</div></div>
+        </div>
+      </div>
+
+      <div style="padding:20px;border:1px solid #e2e8f0;border-radius:12px;background:#f8fafc;">
+        <h3 style="font-size:16px;font-weight:600;margin-bottom:12px;">Before you write…</h3>
+        <ul style="display:flex;flex-direction:column;gap:8px;font-size:13px;color:#64748b;padding-left:0;list-style:none;">
+          <li style="display:flex;gap:6px;"><span style="color:#4f46e5;">→</span> Check our <a href="#" style="color:#4f46e5;text-decoration:none;">FAQ</a> for instant answers</li>
+          <li style="display:flex;gap:6px;"><span style="color:#4f46e5;">→</span> Transcript issues? Include the video URL</li>
+          <li style="display:flex;gap:6px;"><span style="color:#4f46e5;">→</span> Feature idea? Tell us your use case</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer style="border-top:1px solid #e2e8f0;background:#f8fafc;">
+  <div style="max-width:72rem;margin:0 auto;padding:48px 24px;">
+    <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:32px;">
+      <!-- Brand -->
+      <div>
+        <a href="/" style="display:flex;align-items:center;gap:8px;text-decoration:none;margin-bottom:12px;">
+          <div style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;background:#4f46e5;color:white;font-size:14px;font-weight:700;">YT</div>
+          <span style="font-size:18px;font-weight:700;color:#0f172a;">YouTube <span style="color:#4f46e5;">Transcripts</span></span>
+        </a>
+        <p style="font-size:12px;line-height:1.6;color:#64748b;margin-bottom:16px;">
+          Free <strong>YouTube transcript generator</strong> — convert any
+          YouTube video to text instantly. Download transcripts with
+          timestamps, generate AI summaries, and export in multiple formats.
+          3 free transcripts per day; sign in for 100/day.
+        </p>
+        <div style="display:flex;gap:8px;">
+          <a href="https://facebook.com" target="_blank" style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:6px;color:#64748b;transition:color .15s;" aria-label="Facebook">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="https://twitter.com" target="_blank" style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:6px;color:#64748b;transition:color .15s;" aria-label="Twitter">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+        </div>
+      </div>
+      <!-- Features -->
+      <div>
+        <h4 style="margin-bottom:12px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:#64748b;">Features</h4>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:8px;">
+          <li><a href="/" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">YouTube Transcript Generator</a></li>
+          <li><a href="/features/download-transcript" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">Download YouTube Transcript</a></li>
+          <li><a href="/features/video-summarizer" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">YouTube Video Summarizer</a></li>
+          <li><a href="/features/subtitle-downloader" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">YouTube Subtitle Downloader</a></li>
+          <li><a href="/features/transcript-extractor" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">YouTube Transcript Extractor</a></li>
+          <li><a href="/features/convert-to-text" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">Convert YouTube to Text</a></li>
+        </ul>
+      </div>
+      <!-- Tools -->
+      <div>
+        <h4 style="margin-bottom:12px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:#64748b;">Tools</h4>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:8px;">
+          <li><a href="/srt-to-vtt" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">SRT to VTT Converter</a></li>
+          <li><a href="/srt-to-txt" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">SRT to TXT Converter</a></li>
+          <li><a href="/srt-to-ass" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">SRT to ASS Converter</a></li>
+          <li><a href="/open-srt-file" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">Open SRT File</a></li>
+          <li><a href="/features/convert-to-text" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">Video to Text Converter</a></li>
+        </ul>
+      </div>
+      <!-- Company -->
+      <div>
+        <h4 style="margin-bottom:12px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:#64748b;">Company</h4>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:8px;">
+          <li><a href="/about" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">About</a></li>
+          <li><a href="/contact" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">Contact Us</a></li>
+          <li><a href="/privacy" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">Privacy Policy</a></li>
+          <li><a href="/terms" style="font-size:14px;color:#64748b;text-decoration:none;transition:color .15s;">Terms of Service</a></li>
+        </ul>
+      </div>
+    </div>
+    <!-- Bottom -->
+    <div style="border-top:1px solid #e2e8f0;margin-top:40px;padding-top:24px;text-align:center;">
+      <p style="font-size:12px;color:#64748b;opacity:.6;">
+        &copy; 2026 YouTube Transcripts | <strong>Free YouTube Transcript Generator</strong> | All rights reserved.
+      </p>
+      <p style="margin-top:4px;font-size:12px;color:#64748b;opacity:.4;">
+        Not affiliated with YouTube. This tool is for educational and personal use only. YouTube is a trademark of Google LLC.
+      </p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
