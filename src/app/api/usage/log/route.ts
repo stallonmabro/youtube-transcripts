@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { ANON_DAILY_LIMIT } from "@/lib/constants";
+import { DAILY_LIMIT } from "@/lib/constants";
 import { getClientIp, hashIp, today } from "@/lib/rate-limit";
 
 export async function POST(request: NextRequest) {
@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
     .single();
 
   const currentCount = existing?.count ?? 0;
-  if (currentCount >= ANON_DAILY_LIMIT) {
+  if (currentCount >= DAILY_LIMIT) {
     return NextResponse.json(
       { error: "Daily limit reached", allowed: false },
       { status: 429 }
@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
       ? { date: currentDate, count: Math.max(parsed.count, currentCount + 1) }
       : { date: currentDate, count: currentCount + 1 };
 
-  const response = NextResponse.json({ success: true, count: next.count, limit: ANON_DAILY_LIMIT });
+  const response = NextResponse.json({ success: true, count: next.count, limit: DAILY_LIMIT });
   response.cookies.set("yt_usage", JSON.stringify(next), {
     path: "/",
     maxAge: 60 * 60 * 24 * 365,

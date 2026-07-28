@@ -1,5 +1,4 @@
 import { NextRequest } from "next/server";
-import { createClient } from "@/lib/supabase/server";
 
 const LANGUAGES = [
   { code: "es", name: "Spanish" },
@@ -19,15 +18,6 @@ const LANGUAGES = [
 export { LANGUAGES };
 
 export async function POST(request: NextRequest) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    return Response.json({ error: "Sign in to use translation" }, { status: 401 });
-  }
-
   try {
     const body = await request.json();
     const { text, targetLanguage } = body as {
@@ -52,14 +42,15 @@ export async function POST(request: NextRequest) {
       return Response.json({ error: "Unsupported language." }, { status: 400 });
     }
 
-    const apiKey = process.env.OPENAI_API_KEY;
-    const apiUrl = process.env.OPENAI_BASE_URL || "https://api.openai.com/v1";
+    const apiKey = process.env.DEEPSEEK_API_KEY;
+    const apiUrl = "https://api.deepseek.com/v1";
+    const model = process.env.AI_MODEL || "deepseek-chat";
 
     if (!apiKey) {
       return Response.json(
         {
           error: "Translation is not configured.",
-          code: "OPENAI_NOT_CONFIGURED",
+          code: "AI_NOT_CONFIGURED",
         },
         { status: 503 }
       );
@@ -74,7 +65,7 @@ export async function POST(request: NextRequest) {
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
+        model,
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: text },

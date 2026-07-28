@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { ANON_DAILY_LIMIT, AUTH_DAILY_LIMIT } from "@/lib/constants";
+import { DAILY_LIMIT } from "@/lib/constants";
 import { getClientIp, hashIp, today } from "@/lib/rate-limit";
 
 function parseUsageCookie(cookie: string | undefined): { date: string; count: number } {
@@ -29,9 +29,9 @@ export async function GET(request: NextRequest) {
       .lte("created_at", `${todayStr}T23:59:59Z`);
 
     return NextResponse.json({
-      allowed: (count ?? 0) < AUTH_DAILY_LIMIT,
+      allowed: (count ?? 0) < DAILY_LIMIT,
       count: count ?? 0,
-      limit: AUTH_DAILY_LIMIT,
+      limit: DAILY_LIMIT,
     });
   }
 
@@ -55,8 +55,8 @@ export async function GET(request: NextRequest) {
   const count = Math.max(dbCount, cookieCount);
 
   return NextResponse.json({
-    allowed: count < ANON_DAILY_LIMIT,
+    allowed: count < DAILY_LIMIT,
     count,
-    limit: ANON_DAILY_LIMIT,
+    limit: DAILY_LIMIT,
   });
 }

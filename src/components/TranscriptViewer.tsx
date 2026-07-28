@@ -15,9 +15,6 @@ import {
   Share2,
   Bookmark,
   BookmarkCheck,
-  Lock,
-  LogIn,
-  Sparkles,
   Languages,
   FileDown,
 } from "lucide-react";
@@ -33,7 +30,6 @@ import SummaryPanel from "./SummaryPanel";
 import ChatPanel from "./ChatPanel";
 import TranslatePanel from "./TranslatePanel";
 import ShareModal from "./ShareModal";
-import AuthModal from "./AuthModal";
 import { useAuth } from "./AuthProvider";
 import { CAPTION_LANGUAGES } from "@/lib/constants";
 import type { TranscriptSegment } from "@/lib/youtube";
@@ -71,7 +67,6 @@ export default function TranscriptViewer({
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [saveError, setSaveError] = useState("");
-  const [authOpen, setAuthOpen] = useState(false);
   const [playerReady, setPlayerReady] = useState(false);
   const { user } = useAuth();
   const router = useRouter();
@@ -153,7 +148,6 @@ export default function TranscriptViewer({
   function handleDownload(
     format: "txt" | "srt" | "vtt" | "pdf" | "docx"
   ) {
-    if (!user && (format === "pdf" || format === "docx")) return;
     switch (format) {
       case "txt":
         exportTxt(segments, videoId);
@@ -290,13 +284,7 @@ export default function TranscriptViewer({
           Transcript
         </button>
         <button
-          onClick={() => {
-            if (!user) {
-              setAuthOpen(true);
-              return;
-            }
-            setActiveTab("summary");
-          }}
+          onClick={() => setActiveTab("summary")}
           className={cn(
             "inline-flex items-center gap-1.5 px-4 py-3 text-sm font-medium transition-colors",
             activeTab === "summary"
@@ -304,17 +292,10 @@ export default function TranscriptViewer({
               : "text-muted hover:text-foreground"
           )}
         >
-          {!user && <Lock size={12} />}
           Summary
         </button>
         <button
-          onClick={() => {
-            if (!user) {
-              setAuthOpen(true);
-              return;
-            }
-            setActiveTab("chat");
-          }}
+          onClick={() => setActiveTab("chat")}
           className={cn(
             "inline-flex items-center gap-1.5 px-4 py-3 text-sm font-medium transition-colors",
             activeTab === "chat"
@@ -322,17 +303,10 @@ export default function TranscriptViewer({
               : "text-muted hover:text-foreground"
           )}
         >
-          {!user && <Lock size={12} />}
           Chat
         </button>
         <button
-          onClick={() => {
-            if (!user) {
-              setAuthOpen(true);
-              return;
-            }
-            setActiveTab("translate");
-          }}
+          onClick={() => setActiveTab("translate")}
           className={cn(
             "inline-flex items-center gap-1.5 px-4 py-3 text-sm font-medium transition-colors",
             activeTab === "translate"
@@ -340,7 +314,6 @@ export default function TranscriptViewer({
               : "text-muted hover:text-foreground"
           )}
         >
-          {!user && <Lock size={12} />}
           Translate
         </button>
         <button
@@ -463,8 +436,7 @@ export default function TranscriptViewer({
                       <div className="border-t border-border px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-muted/60">
                         Document
                       </div>
-                      {(["pdf", "docx"] as const).map((fmt) =>
-                        user ? (
+                      {(["pdf", "docx"] as const).map((fmt) => (
                           <button
                             key={fmt}
                             onClick={() => handleDownload(fmt)}
@@ -472,18 +444,7 @@ export default function TranscriptViewer({
                           >
                             .{fmt.toUpperCase()}
                           </button>
-                        ) : (
-                          <button
-                            key={fmt}
-                            disabled
-                            className="flex w-full items-center justify-between px-4 py-2 text-left text-sm text-muted/50 last:rounded-b-lg"
-                            title="Sign in to unlock"
-                          >
-                            <span>.{fmt.toUpperCase()}</span>
-                            <Lock size={12} />
-                          </button>
-                        )
-                      )}
+                      ))}
                     </div>
                   </>
                 )}
@@ -532,74 +493,11 @@ export default function TranscriptViewer({
           )}
         </>
       ) : activeTab === "summary" ? (
-        user ? (
-          <SummaryPanel transcript={fullText} />
-        ) : (
-          <div className="rounded-xl border border-border bg-surface/30 p-8 text-center">
-            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-              <Sparkles size={22} />
-            </div>
-            <h3 className="font-semibold text-foreground">
-              AI-Powered Summary
-            </h3>
-            <p className="mt-1 text-sm text-muted">
-              Sign in to generate AI summaries of any transcript.
-            </p>
-            <button
-              onClick={() => setAuthOpen(true)}
-              className="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-dark"
-            >
-              <LogIn size={16} />
-              Sign In
-            </button>
-          </div>
-        )
+        <SummaryPanel transcript={fullText} />
       ) : activeTab === "chat" ? (
-        user ? (
-          <ChatPanel transcript={fullText} />
-        ) : (
-          <div className="rounded-xl border border-border bg-surface/30 p-8 text-center">
-            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-              <Sparkles size={22} />
-            </div>
-            <h3 className="font-semibold text-foreground">
-              AI Chat
-            </h3>
-            <p className="mt-1 text-sm text-muted">
-              Sign in to ask questions about this transcript.
-            </p>
-            <button
-              onClick={() => setAuthOpen(true)}
-              className="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-dark"
-            >
-              <LogIn size={16} />
-              Sign In
-            </button>
-          </div>
-        )
+        <ChatPanel transcript={fullText} />
       ) : activeTab === "translate" ? (
-        user ? (
-          <TranslatePanel transcript={fullText} />
-        ) : (
-          <div className="rounded-xl border border-border bg-surface/30 p-8 text-center">
-            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-              <Languages size={22} />
-            </div>
-            <h3 className="font-semibold text-foreground">
-              Translate
-            </h3>
-            <p className="mt-1 text-sm text-muted">
-              Sign in to translate this transcript.
-            </p>
-            <button
-              onClick={() => setAuthOpen(true)}
-              className="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-dark"
-            >
-              <LogIn size={16} />
-              Sign In
-            </button>
-          </div>
-        )
+        <TranslatePanel transcript={fullText} />
       ) : activeTab === "export" ? (
         <div className="space-y-4">
           <h3 className="text-base font-semibold text-foreground">Download Transcript</h3>
@@ -629,28 +527,18 @@ export default function TranscriptViewer({
             {(["pdf", "docx"] as const).map((fmt) => (
               <label
                 key={fmt}
-                className={`flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 transition-colors ${
-                  user
-                    ? "border-border bg-card hover:bg-surface/50"
-                    : "border-border/50 bg-surface/30 opacity-60"
-                }`}
+                className="flex cursor-pointer items-center gap-3 rounded-xl border border-border bg-card px-4 py-3 transition-colors hover:bg-surface/50"
               >
                 <input
                   type="radio"
                   name="export-format"
                   checked={downloadFormat === fmt}
                   onChange={() => setDownloadFormat(fmt)}
-                  disabled={!user}
                   className="accent-primary"
                 />
                 <div className="flex-1">
                   <div className="flex items-center gap-2 text-sm font-medium text-foreground">
                     {fmt === "pdf" ? "PDF (.pdf)" : "Word (.docx)"}
-                    {!user && (
-                      <span className="inline-flex items-center gap-1 rounded bg-primary/10 px-1.5 py-0.5 text-xs font-medium text-primary">
-                        <Lock size={10} /> Sign in
-                      </span>
-                    )}
                   </div>
                   <div className="text-xs text-muted">
                     {fmt === "pdf" ? "Formatted document" : "Microsoft Word document"}
@@ -668,8 +556,6 @@ export default function TranscriptViewer({
           </button>
         </div>
       ) : null}
-
-      <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
 
       <ShareModal
         open={shareOpen}

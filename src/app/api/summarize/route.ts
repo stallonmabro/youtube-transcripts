@@ -1,5 +1,4 @@
 import { NextRequest } from "next/server";
-import { createClient } from "@/lib/supabase/server";
 
 interface SummarizeBody {
   transcript: string;
@@ -16,15 +15,6 @@ const LENGTH_PROMPTS: Record<string, string> = {
 };
 
 export async function POST(request: NextRequest) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    return Response.json({ error: "Sign in to use AI summaries" }, { status: 401 });
-  }
-
   try {
     const body: SummarizeBody = await request.json();
 
@@ -48,8 +38,9 @@ export async function POST(request: NextRequest) {
 
     const systemPrompt = `You are a helpful assistant that summarizes YouTube video transcripts. ${lengthInstruction} Keep it concise and well-structured.`;
 
-    const apiKey = process.env.OPENAI_API_KEY;
-    const apiUrl = process.env.OPENAI_BASE_URL || "https://api.openai.com/v1";
+    const apiKey = process.env.DEEPSEEK_API_KEY;
+    const apiUrl = "https://api.deepseek.com/v1";
+    const model = process.env.AI_MODEL || "deepseek-chat";
 
     if (apiKey) {
       const res = await fetch(`${apiUrl}/chat/completions`, {
@@ -59,7 +50,7 @@ export async function POST(request: NextRequest) {
           Authorization: `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
-          model: "gpt-4o-mini",
+          model,
           messages: [
             { role: "system", content: systemPrompt },
             {
@@ -74,7 +65,7 @@ export async function POST(request: NextRequest) {
 
       if (!res.ok) {
         const errData = await res.text();
-        console.error("OpenAI API error:", errData);
+        console.error("DeepSeek API error:", errData);
         throw new Error("AI service temporarily unavailable");
       }
 

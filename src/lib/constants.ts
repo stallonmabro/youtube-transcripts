@@ -1,5 +1,4 @@
-export const ANON_DAILY_LIMIT = 3;
-export const AUTH_DAILY_LIMIT = 100;
+export const DAILY_LIMIT = 20;
 
 export const MAX_SEGMENTS = 5000;
 export const MAX_TRANSCRIPT_TEXT_LENGTH = 100_000;

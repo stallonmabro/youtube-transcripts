@@ -1,5 +1,4 @@
 import { NextRequest } from "next/server";
-import { createClient } from "@/lib/supabase/server";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -7,15 +6,6 @@ interface ChatMessage {
 }
 
 export async function POST(request: NextRequest) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    return Response.json({ error: "Sign in to use AI chat" }, { status: 401 });
-  }
-
   try {
     const body = await request.json();
     const { transcript, messages: prevMessages } = body as {
@@ -30,7 +20,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const apiKey = process.env.OPENAI_API_KEY;
+    const apiKey = process.env.DEEPSEEK_API_KEY;
+    const apiUrl = "https://api.deepseek.com/v1";
+    const model = process.env.AI_MODEL || "deepseek-chat";
     const MAX_TRANSCRIPT_CHARS = 25_000;
     const MAX_HISTORY_MESSAGES = 20;
 
@@ -68,8 +60,6 @@ export async function POST(request: NextRequest) {
       ...trimmedHistory,
     ];
 
-    const apiUrl = process.env.OPENAI_BASE_URL || "https://api.openai.com/v1";
-
     const res = await fetch(`${apiUrl}/chat/completions`, {
       method: "POST",
       headers: {
@@ -77,7 +67,7 @@ export async function POST(request: NextRequest) {
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
+        model,
         messages,
         stream: true,
         max_tokens: 1024,
@@ -87,7 +77,7 @@ export async function POST(request: NextRequest) {
 
     if (!res.ok) {
       const errText = await res.text();
-      console.error("OpenAI chat error:", errText);
+      console.error("DeepSeek chat error:", errText);
       return Response.json(
         { error: "AI service temporarily unavailable" },
         { status: 502 }
