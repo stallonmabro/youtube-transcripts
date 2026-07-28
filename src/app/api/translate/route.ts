@@ -30,40 +30,23 @@ function fmt(seconds: number): string {
 
 function parseTranslated(input: string, originalSegments: Segment[]): Segment[] {
   const results: Segment[] = [];
-  const lines = input.split("\n");
-  let currentText = "";
 
-  for (const line of lines) {
-    const match = line.match(/^\[(\d{2}):(\d{2})\]\s*/);
-    if (match) {
-      if (currentText.trim()) {
-        const prev = results[results.length - 1];
-        if (prev) {
-          prev.text = currentText.trim();
-        }
-      }
-      const mins = parseInt(match[1], 10);
-      const secs = parseInt(match[2], 10);
-      const offset = mins * 60 + secs;
-      currentText = line.slice(match[0].length);
-      results.push({ offset, text: "" });
-    } else if (line.trim()) {
-      if (results.length === 0) {
-        // No timestamp markers in output — fall back to mapping by position
-        break;
-      }
-      currentText += (currentText ? " " : "") + line;
+  // Split on every [MM:SS] marker, including inline
+  const parts = input.split(/(?=\[\d{2}:\d{2}\])/);
+  for (const part of parts) {
+    const match = part.match(/^\[(\d{2}):(\d{2})\]\s*/);
+    if (!match) continue;
+    const mins = parseInt(match[1], 10);
+    const secs = parseInt(match[2], 10);
+    const offset = mins * 60 + secs;
+    const text = part.slice(match[0].length).trim();
+    if (text) {
+      results.push({ offset, text });
     }
   }
 
-  // Flush last segment
-  if (currentText.trim() && results.length > 0) {
-    const prev = results[results.length - 1];
-    prev.text = currentText.trim();
-  }
-
   // If timestamp parsing failed, map translations to original segments by position
-  if (results.length === 0 || results.every((s) => !s.text)) {
+  if (results.length === 0) {
     const paragraphs = input
       .split(/\n\n+/)
       .map((p) => p.trim())
@@ -76,7 +59,6 @@ function parseTranslated(input: string, originalSegments: Segment[]): Segment[] 
       }));
     }
 
-    // Absolute fallback: return the full translation as one segment
     const cleanText = input.trim();
     if (cleanText && originalSegments.length > 0) {
       return [
@@ -88,7 +70,7 @@ function parseTranslated(input: string, originalSegments: Segment[]): Segment[] 
     }
   }
 
-  return results.filter((s) => s.text);
+  return results;
 }
 
 export async function POST(request: NextRequest) {
