@@ -1,5 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import DashboardContent from "./DashboardContent";
 
 export const metadata = {
@@ -41,11 +43,17 @@ export default async function DashboardPage() {
     .gte("created_at", monthStart.toISOString());
 
   return (
-    <DashboardContent
-      transcripts={transcripts || []}
-      todayUsage={todayUsage ?? 0}
-      monthUsage={monthUsage ?? 0}
-      totalTranscripts={transcripts?.length ?? 0}
-    />
+    <>
+      <Header />
+      <main className="flex-1">
+        <DashboardContent
+          transcripts={transcripts || []}
+          todayUsage={todayUsage ?? 0}
+          monthUsage={monthUsage ?? 0}
+          totalTranscripts={transcripts?.length ?? 0}
+        />
+      </main>
+      <Footer />
+    </>
   );
 }

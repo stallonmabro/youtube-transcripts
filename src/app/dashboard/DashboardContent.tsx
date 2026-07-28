@@ -118,7 +118,7 @@ export default function DashboardContent({
   }
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+    <div className="mx-auto max-w-6xl px-6 py-8">
       {/* Welcome banner */}
       <div className="mb-6 flex items-center justify-between rounded-2xl border border-primary/10 bg-gradient-to-r from-indigo-50 to-purple-50 px-6 py-5">
         <div>
