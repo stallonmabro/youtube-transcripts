@@ -6,7 +6,6 @@ import {
   Loader2,
   Copy,
   Check,
-  ChevronDown,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -14,6 +13,68 @@ type SummaryLength = "brief" | "detailed" | "bullets";
 
 interface SummaryPanelProps {
   transcript: string;
+}
+
+function renderMarkdown(text: string): React.ReactNode {
+  // Split into blocks (paragraphs separated by blank lines)
+  const blocks = text.split(/\n\n+/);
+
+  return blocks.map((block, bi) => {
+    const trimmed = block.trim();
+    if (!trimmed) return null;
+
+    // Bullet list detection: lines that start with - * • or numbered 1. 2.
+    const lines = trimmed.split("\n");
+    const isBulletList = lines.every(
+      (l) => /^[-*•]\s/.test(l.trim()) || /^\d+[.)]\s/.test(l.trim())
+    );
+
+    if (isBulletList) {
+      return (
+        <ul key={bi} className="mb-3 space-y-1 pl-5">
+          {lines.map((line, li) => {
+            const cleaned = line.replace(/^[-*•]\s*/, "").replace(/^\d+[.)]\s*/, "");
+            return (
+              <li key={li} className="text-sm leading-relaxed text-foreground/85">
+                {formatInlineMarkdown(cleaned)}
+              </li>
+            );
+          })}
+        </ul>
+      );
+    }
+
+    // Bold heading detection (line that is entirely bold or ends with :)
+    const isHeading =
+      /^\*\*.*\*\*$/.test(trimmed) ||
+      (lines.length === 1 && trimmed.endsWith(":") && trimmed.length < 80);
+
+    if (isHeading) {
+      return (
+        <h4 key={bi} className="mb-2 mt-4 text-sm font-bold text-foreground first:mt-0">
+          {formatInlineMarkdown(trimmed.replace(/^\*\*|\*\*$/g, ""))}
+        </h4>
+      );
+    }
+
+    // Regular paragraph
+    return (
+      <p key={bi} className="mb-3 text-sm leading-relaxed text-foreground/85 last:mb-0">
+        {formatInlineMarkdown(trimmed)}
+      </p>
+    );
+  });
+}
+
+function formatInlineMarkdown(text: string): React.ReactNode {
+  // Bold: **text**
+  const parts = text.split(/(\*\*.*?\*\*)/g);
+  return parts.map((part, i) => {
+    if (part.startsWith("**") && part.endsWith("**")) {
+      return <strong key={i} className="font-semibold text-foreground">{part.slice(2, -2)}</strong>;
+    }
+    return part;
+  });
 }
 
 export default function SummaryPanel({ transcript }: SummaryPanelProps) {
@@ -138,8 +199,8 @@ export default function SummaryPanel({ transcript }: SummaryPanelProps) {
               )}
             </button>
           </div>
-          <div className="whitespace-pre-wrap px-4 py-4 text-sm leading-relaxed text-muted">
-            {summary}
+          <div className="px-5 py-4">
+            {renderMarkdown(summary)}
           </div>
         </div>
       )}

@@ -145,24 +145,30 @@ export default function TranscriptViewer({
     setTimeout(() => setCopied(null), 2000);
   }
 
+  const exportMeta = {
+    videoId,
+    title: videoInfo?.title && videoInfo.title !== "YouTube Video" ? videoInfo.title : undefined,
+    channel: videoInfo?.channelTitle || undefined,
+  };
+
   function handleDownload(
     format: "txt" | "srt" | "vtt" | "pdf" | "docx"
   ) {
     switch (format) {
       case "txt":
-        exportTxt(segments, videoId);
+        exportTxt(segments, videoId, exportMeta);
         break;
       case "srt":
         exportSrt(segments, videoId);
         break;
       case "vtt":
-        exportVtt(segments, videoId);
+        exportVtt(segments, videoId, exportMeta);
         break;
       case "pdf":
-        exportPdf(segments, videoId, `YouTube Transcript — ${videoId}`);
+        exportPdf(segments, videoId, exportMeta);
         break;
       case "docx":
-        exportDocx(segments, videoId);
+        exportDocx(segments, videoId, exportMeta);
         break;
     }
     setDownloadOpen(false);
@@ -468,8 +474,13 @@ export default function TranscriptViewer({
               filteredSegments.map((segment, i) => (
                 <div
                   key={i}
-                  className="group flex gap-3 border-b border-border/50 px-4 py-3 transition-colors last:border-0 hover:bg-surface/50"
+                  className={`group flex gap-3 border-b border-border/50 px-4 py-3 transition-colors last:border-0 hover:bg-surface/60 ${
+                    i % 2 === 0 ? "bg-transparent" : "bg-surface/30"
+                  }`}
                 >
+                  <span className="mt-0.5 shrink-0 select-none text-xs font-medium text-muted/40 tabular-nums">
+                    {String(i + 1).padStart(3, "0")}
+                  </span>
                   <button
                     onClick={() => jumpToVideo(segment.offset)}
                     className="mt-0.5 shrink-0 rounded px-1.5 py-0.5 font-mono text-xs font-medium text-primary transition-colors hover:bg-primary/10"
@@ -497,7 +508,7 @@ export default function TranscriptViewer({
       ) : activeTab === "chat" ? (
         <ChatPanel transcript={fullText} />
       ) : activeTab === "translate" ? (
-        <TranslatePanel transcript={fullText} />
+        <TranslatePanel transcript={fullText} segments={segments} />
       ) : activeTab === "export" ? (
         <div className="space-y-4">
           <h3 className="text-base font-semibold text-foreground">Download Transcript</h3>
