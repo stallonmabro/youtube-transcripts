@@ -9,8 +9,10 @@ import {
   FileText,
   Activity,
   CalendarDays,
-  ArrowUpDown,
+  ArrowRight,
 } from "lucide-react";
+import { useAuth } from "@/components/AuthProvider";
+import { DAILY_LIMIT } from "@/lib/constants";
 
 interface Transcript {
   id: string;
@@ -20,6 +22,19 @@ interface Transcript {
   duration_minutes: number | null;
   word_count: number | null;
   created_at: string;
+}
+
+const GRADIENTS = [
+  "linear-gradient(135deg, #1e1b4b, #312e81)",
+  "linear-gradient(135deg, #0f172a, #1e293b)",
+  "linear-gradient(135deg, #1e3a5f, #2563eb)",
+  "linear-gradient(135deg, #3b0764, #7c3aed)",
+  "linear-gradient(135deg, #064e3b, #10b981)",
+  "linear-gradient(135deg, #7c2d12, #ea580c)",
+];
+
+function isNew(createdAt: string): boolean {
+  return Date.now() - new Date(createdAt).getTime() < 24 * 60 * 60 * 1000;
 }
 
 export default function DashboardContent({
@@ -33,23 +48,44 @@ export default function DashboardContent({
   monthUsage: number;
   totalTranscripts: number;
 }) {
+  const { user } = useAuth();
   const [transcripts, setTranscripts] = useState(initial);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<"newest" | "oldest" | "longest" | "shortest">("newest");
+  const [timeFilter, setTimeFilter] = useState("all");
   const [deleting, setDeleting] = useState<string | null>(null);
   const [error, setError] = useState("");
   const [page, setPage] = useState(1);
-  const perPage = 10;
+  const perPage = 9;
 
-  const dailyLimit = 100;
+  const usagePercent = Math.min(Math.round((todayUsage / DAILY_LIMIT) * 100), 100);
+  const remaining = Math.max(DAILY_LIMIT - todayUsage, 0);
+  const displayName = user?.email?.split("@")[0] || "there";
 
-  const filtered = search.trim()
-    ? transcripts.filter(
-        (t) =>
-          t.video_title?.toLowerCase().includes(search.toLowerCase()) ||
-          t.video_id.toLowerCase().includes(search.toLowerCase())
-      )
-    : transcripts;
+  let filtered = transcripts;
+
+  if (timeFilter !== "all") {
+    const now = new Date();
+    const cutoff = new Date();
+    if (timeFilter === "today") {
+      cutoff.setHours(0, 0, 0, 0);
+    } else if (timeFilter === "week") {
+      cutoff.setDate(now.getDate() - 7);
+    } else if (timeFilter === "month") {
+      cutoff.setMonth(now.getMonth() - 1);
+    }
+    filtered = filtered.filter((t) => new Date(t.created_at) >= cutoff);
+  }
+
+  if (search.trim()) {
+    const q = search.toLowerCase();
+    filtered = filtered.filter(
+      (t) =>
+        t.video_title?.toLowerCase().includes(q) ||
+        t.video_id.toLowerCase().includes(q) ||
+        t.channel_name?.toLowerCase().includes(q)
+    );
+  }
 
   const sorted = [...filtered].sort((a, b) => {
     switch (sort) {
@@ -81,58 +117,72 @@ export default function DashboardContent({
     }
   }
 
-  const usagePercent = Math.min(Math.round((todayUsage / dailyLimit) * 100), 100);
-
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-      {/* Stats row */}
-      <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <div className="rounded-xl border border-border bg-card p-4">
-          <div className="flex items-center gap-2 text-sm text-muted">
-            <Activity size={14} />
-            Today
-          </div>
-          <p className="mt-1 text-2xl font-bold text-foreground">{todayUsage}</p>
-        </div>
-        <div className="rounded-xl border border-border bg-card p-4">
-          <div className="flex items-center gap-2 text-sm text-muted">
-            <CalendarDays size={14} />
-            This Month
-          </div>
-          <p className="mt-1 text-2xl font-bold text-foreground">{monthUsage}</p>
-        </div>
-        <div className="rounded-xl border border-border bg-card p-4">
-          <div className="flex items-center gap-2 text-sm text-muted">
-            <FileText size={14} />
-            Saved
-          </div>
-          <p className="mt-1 text-2xl font-bold text-foreground">{totalTranscripts}</p>
-        </div>
-        <div className="rounded-xl border border-border bg-card p-4">
-          <div className="flex items-center gap-2 text-sm text-muted">
-            <Clock size={14} />
-            Daily limit
-          </div>
-          <p className="mt-1 text-2xl font-bold text-foreground">
-            {todayUsage}
-            <span className="text-base font-normal text-muted"> / {dailyLimit}</span>
+      {/* Welcome banner */}
+      <div className="mb-6 flex items-center justify-between rounded-2xl border border-primary/10 bg-gradient-to-r from-indigo-50 to-purple-50 px-6 py-5">
+        <div>
+          <h2 className="text-lg font-bold text-foreground">
+            Welcome back, {displayName} 👋
+          </h2>
+          <p className="mt-0.5 text-sm text-muted">
+            You&apos;ve saved {totalTranscripts} transcript{totalTranscripts !== 1 ? "s" : ""}. Keep building your knowledge base.
           </p>
-          <div className="mt-2 h-1.5 w-full rounded-full bg-border">
+        </div>
+        <a
+          href="/"
+          className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-primary-dark"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+          New Transcript
+        </a>
+      </div>
+
+      {/* Stats row */}
+      <div className="mb-7 grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div className="rounded-xl border border-border bg-card p-4">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-muted">Today</span>
+            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-600">
+              ↑ {todayUsage}
+            </span>
+          </div>
+          <p className="mt-1.5 text-3xl font-bold text-foreground">{todayUsage}</p>
+        </div>
+        <div className="rounded-xl border border-border bg-card p-4">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-muted">This Month</span>
+            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-600">
+              ↑ {monthUsage}
+            </span>
+          </div>
+          <p className="mt-1.5 text-3xl font-bold text-foreground">{monthUsage}</p>
+        </div>
+        <div className="rounded-xl border border-primary bg-gradient-to-br from-indigo-50 to-white p-4">
+          <span className="text-sm font-medium text-muted">Daily Limit</span>
+          <p className="mt-1.5 text-3xl font-bold text-foreground">
+            {todayUsage}
+            <span className="text-base font-normal text-muted"> / {DAILY_LIMIT}</span>
+          </p>
+          <div className="mt-2.5 h-1.5 w-full rounded-full bg-border">
             <div
-              className="h-full rounded-full bg-primary transition-all"
+              className="h-full rounded-full bg-gradient-to-r from-primary to-primary-light transition-all duration-500"
               style={{ width: `${usagePercent}%` }}
             />
           </div>
+          <p className="mt-1 text-xs text-muted">
+            {remaining} remaining today
+          </p>
         </div>
       </div>
 
       {/* Toolbar */}
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">My Transcripts</h1>
-          <p className="mt-1 text-sm text-muted">View and manage your saved transcripts.</p>
-        </div>
-        <div className="flex gap-3">
+      <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+        <h1 className="text-xl font-bold text-foreground">Saved Transcripts</h1>
+        <div className="flex flex-wrap gap-2">
           <div className="relative">
             <Search
               size={15}
@@ -146,7 +196,7 @@ export default function DashboardContent({
                 setSearch(e.target.value);
                 setPage(1);
               }}
-              placeholder="Search transcripts..."
+              placeholder="Search by title or channel..."
               className="w-60 rounded-lg border border-border bg-card py-2 pl-9 pr-3 text-sm text-foreground placeholder:text-muted/60 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
             />
           </div>
@@ -159,6 +209,19 @@ export default function DashboardContent({
             <option value="oldest">Oldest first</option>
             <option value="longest">Longest</option>
             <option value="shortest">Shortest</option>
+          </select>
+          <select
+            value={timeFilter}
+            onChange={(e) => {
+              setTimeFilter(e.target.value);
+              setPage(1);
+            }}
+            className="rounded-lg border border-border bg-card px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+          >
+            <option value="all">All time</option>
+            <option value="today">Today</option>
+            <option value="week">This week</option>
+            <option value="month">This month</option>
           </select>
         </div>
       </div>
@@ -177,79 +240,115 @@ export default function DashboardContent({
 
       {/* Content */}
       {paged.length === 0 ? (
-        <div className="rounded-xl border border-border bg-card px-4 py-20 text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-surface">
-            <FileText size={28} className="text-primary" />
+        <div className="rounded-2xl border border-border bg-card px-4 py-20 text-center">
+          <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-50 to-indigo-100">
+            <FileText size={36} className="text-primary" />
           </div>
-          <h2 className="text-lg font-semibold text-foreground">No transcripts yet</h2>
-          <p className="mx-auto mt-2 max-w-sm text-sm text-muted">
-            {search
-              ? "No transcripts match your search. Try a different query."
-              : "Generate your first YouTube transcript — it's free and takes seconds. Your saved transcripts will appear here."}
+          <h2 className="text-xl font-bold text-foreground">
+            {search || timeFilter !== "all"
+              ? "No matches found"
+              : "Your transcript library is empty"}
+          </h2>
+          <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-muted">
+            {search || timeFilter !== "all"
+              ? "Try a different search or adjust your filters."
+              : "Save transcripts while watching and they'll appear here as beautiful cards. Each card keeps the video stats and quick actions."}
           </p>
-          {!search && (
+          {!search && timeFilter === "all" && (
             <a
               href="/"
               className="mt-6 inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-dark"
             >
               <ExternalLink size={16} />
-              Generate Your First Transcript
+              Explore & Save Transcripts
             </a>
           )}
         </div>
       ) : (
         <>
-          <div className="space-y-2">
-            {paged.map((t) => (
+          {/* Card Grid */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {paged.map((t, i) => (
               <div
                 key={t.id}
-                className="flex items-center justify-between gap-4 rounded-xl border border-border bg-card px-4 py-3 transition-colors hover:bg-surface/50"
+                className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
               >
-                <div className="min-w-0 flex-1">
-                  <a
-                    href={`/watch?v=${t.video_id}`}
-                    className="block truncate text-sm font-medium text-foreground transition-colors hover:text-primary"
-                    title={t.video_title || `Video ${t.video_id}`}
-                  >
-                    {t.video_title || `Video ${t.video_id}`}
-                  </a>
-                  <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted">
-                    {t.channel_name && <span>{t.channel_name}</span>}
-                    {!t.channel_name && <span>—</span>}
-                    <span className="inline-flex items-center gap-1">
+                {/* Thumbnail */}
+                <a
+                  href={`/watch?v=${t.video_id}`}
+                  className="relative flex h-[140px] items-center justify-center overflow-hidden"
+                  style={{ background: GRADIENTS[i % GRADIENTS.length] }}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                  <span className="absolute bottom-2 right-3 rounded-md bg-black/50 px-2 py-0.5 text-xs text-white/80">
+                    {t.duration_minutes
+                      ? t.duration_minutes >= 60
+                        ? `${Math.floor(t.duration_minutes / 60)}h ${t.duration_minutes % 60}m`
+                        : `${t.duration_minutes}m`
+                      : "—"}
+                  </span>
+                </a>
+
+                {/* Card body */}
+                <div className="flex flex-1 flex-col p-3.5">
+                  <div className="flex items-start gap-2">
+                    {isNew(t.created_at) && (
+                      <span className="mt-0.5 inline-block shrink-0 rounded-full bg-indigo-50 px-2 py-0.5 text-[10px] font-semibold text-primary">
+                        New
+                      </span>
+                    )}
+                    <a
+                      href={`/watch?v=${t.video_id}`}
+                      className="text-sm font-semibold leading-snug text-foreground transition-colors hover:text-primary line-clamp-2"
+                      title={t.video_title || `Video ${t.video_id}`}
+                    >
+                      {t.video_title || `Video ${t.video_id}`}
+                    </a>
+                  </div>
+
+                  <div className="mt-2 flex items-center gap-3 text-xs text-muted">
+                    <span className="truncate">
+                      {t.channel_name || "Unknown channel"}
+                    </span>
+                    <span className="inline-flex items-center gap-1 shrink-0">
                       <FileText size={11} />
                       {t.word_count?.toLocaleString() || "—"} words
                     </span>
-                    <span className="inline-flex items-center gap-1">
-                      <Clock size={11} />
-                      {t.duration_minutes || "—"} min
-                    </span>
-                    <span>
+                  </div>
+
+                  <div className="mt-auto flex items-center justify-between border-t border-border/50 pt-3">
+                    <span className="text-xs text-muted/70">
                       {new Date(t.created_at).toLocaleDateString("en-US", {
                         month: "short",
                         day: "numeric",
                         year: "numeric",
                       })}
                     </span>
+                    <div className="flex items-center gap-2">
+                      <a
+                        href={`/watch?v=${t.video_id}`}
+                        className="inline-flex items-center gap-1 text-xs font-medium text-primary transition-colors hover:text-primary-dark"
+                      >
+                        View transcript
+                        <ArrowRight size={10} />
+                      </a>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleDelete(t.id);
+                        }}
+                        disabled={deleting === t.id}
+                        className="inline-flex items-center gap-1 text-xs font-medium text-red-500 transition-colors hover:text-red-600 disabled:opacity-50"
+                        title="Delete"
+                      >
+                        {deleting === t.id ? (
+                          <span className="text-xs">...</span>
+                        ) : (
+                          <Trash2 size={12} />
+                        )}
+                      </button>
+                    </div>
                   </div>
-                </div>
-
-                <div className="flex shrink-0 items-center gap-2">
-                  <a
-                    href={`/watch?v=${t.video_id}`}
-                    className="inline-flex items-center gap-1 rounded-lg border border-border px-2.5 py-1.5 text-xs font-medium text-muted transition-colors hover:text-foreground"
-                  >
-                    <ExternalLink size={12} />
-                    View
-                  </a>
-                  <button
-                    onClick={() => handleDelete(t.id)}
-                    disabled={deleting === t.id}
-                    className="inline-flex items-center gap-1 rounded-lg border border-red-200 px-2.5 py-1.5 text-xs font-medium text-red-500 transition-colors hover:bg-red-50 disabled:opacity-50"
-                  >
-                    <Trash2 size={12} />
-                    {deleting === t.id ? "..." : "Delete"}
-                  </button>
                 </div>
               </div>
             ))}
@@ -257,7 +356,7 @@ export default function DashboardContent({
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="mt-6 flex items-center justify-center gap-1">
+            <div className="mt-7 flex items-center justify-center gap-1">
               <button
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page === 1}
@@ -265,19 +364,34 @@ export default function DashboardContent({
               >
                 ← Prev
               </button>
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
-                <button
-                  key={n}
-                  onClick={() => setPage(n)}
-                  className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
-                    n === page
-                      ? "bg-primary text-white"
-                      : "border border-border text-muted hover:text-foreground"
-                  }`}
-                >
-                  {n}
-                </button>
-              ))}
+              {Array.from({ length: totalPages }, (_, i) => i + 1)
+                .filter((n) => {
+                  if (totalPages <= 7) return true;
+                  if (n === 1 || n === totalPages) return true;
+                  if (Math.abs(n - page) <= 1) return true;
+                  return false;
+                })
+                .map((n, idx, arr) => {
+                  const showEllipsis =
+                    idx > 0 && n - arr[idx - 1] > 1;
+                  return (
+                    <span key={n} className="flex items-center gap-1">
+                      {showEllipsis && (
+                        <span className="px-1 text-sm text-muted/40">…</span>
+                      )}
+                      <button
+                        onClick={() => setPage(n)}
+                        className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
+                          n === page
+                            ? "bg-primary text-white"
+                            : "border border-border text-muted hover:text-foreground"
+                        }`}
+                      >
+                        {n}
+                      </button>
+                    </span>
+                  );
+                })}
               <button
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                 disabled={page === totalPages}
